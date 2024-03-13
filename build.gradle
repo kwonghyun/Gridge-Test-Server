@@ -23,12 +23,13 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:23.0.0'
+    implementation ('org.jetbrains:annotations:23.0.0')
 
 
     // Spring Boot Starter
     testImplementation ('org.springframework.boot:spring-boot-starter-test')
     testImplementation ('org.springframework.security:spring-security-test')
+    developmentOnly ('org.springframework.boot:spring-boot-devtools')
 
     // Lombok
     implementation ('org.projectlombok:lombok')
@@ -42,15 +43,16 @@ dependencies {
 
     // Web
     implementation ('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.springframework.boot:spring-boot-starter')
-    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation ('org.springframework.boot:spring-boot-starter')
+    implementation ('org.springframework.boot:spring-boot-starter-web')
+    implementation ('org.springframework.boot:spring-boot-starter-thymeleaf')
 
     // Validation
-    implementation('org.springframework.boot:spring-boot-starter-validation')
+    implementation ('org.springframework.boot:spring-boot-starter-validation')
 
     // jwt
-    implementation(group: 'io.jsonwebtoken', name: 'jjwt', version: '0.11.5')
-    implementation('io.jsonwebtoken:jjwt:0.9.1')
+    implementation (group: 'io.jsonwebtoken', name: 'jjwt', version: '0.11.5')
+    implementation ('io.jsonwebtoken:jjwt:0.9.1')
 
     // Swagger
     implementation ('org.springdoc:springdoc-openapi-ui:1.6.14')
