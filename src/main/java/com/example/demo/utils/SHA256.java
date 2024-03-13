@@ -3,8 +3,6 @@ package com.example.demo.utils;
 import java.security.MessageDigest;
 
 public class SHA256 {
-    public SHA256() {
-    }
 
     public static String encrypt(String planText) {
         try {

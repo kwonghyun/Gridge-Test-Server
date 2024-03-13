@@ -44,7 +44,7 @@ public class UserService {
 
         String encryptPwd;
         try {
-            encryptPwd = new SHA256().encrypt(postUserReq.getPassword());
+            encryptPwd = SHA256.encrypt(postUserReq.getPassword());
             postUserReq.setPassword(encryptPwd);
         } catch (Exception exception) {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
@@ -64,9 +64,9 @@ public class UserService {
     }
 
     @Transactional
-    public PostUserRes createOAuthUser(PostUserReq postUserReq, String oAuthAccessToken) throws JsonProcessingException {
+    public PostUserRes createOAuthUser(PostUserReq postUserReq,  Constant.SocialLoginType socialLoginType,String oAuthAccessToken) throws JsonProcessingException {
         User newUser = createUser(postUserReq);
-        OAuth oAuth = oAuthService.createOAuth(Constant.SocialLoginType.KAKAO, oAuthAccessToken, newUser);
+        OAuth oAuth = oAuthService.createOAuth(socialLoginType, oAuthAccessToken, newUser);
 
         return new PostUserRes(newUser.getId());
     }
@@ -117,7 +117,7 @@ public class UserService {
 
         String encryptPwd;
         try {
-            encryptPwd = new SHA256().encrypt(postLoginReq.getPassword());
+            encryptPwd = SHA256.encrypt(postLoginReq.getPassword());
         } catch (Exception exception) {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
