@@ -3,6 +3,8 @@ spring:
     group: # Run - Edit Configurations - Active Profiles에서 설정
       dev: common, dev
       prod: common, prod
+
+
 ---
 spring:
   config:
@@ -10,6 +12,9 @@ spring:
       on-profile: "common"
   application:
     name: demo
+  mvc:
+    view:
+      suffix: .html
   sql:
     init:
       platform: mysql
@@ -18,14 +23,13 @@ spring:
     username: ${LOCAL_DB_USERNAME}
     password: ${LOCAL_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8버전
-  OAuth:
+  OAuth2:
     kakao:
-      login-url: https://kauth.kakao.com/oauth/authorize
+      login-uri: https://kauth.kakao.com/oauth/authorize
       client-id: ${KAKAO_REST_API_KEY}
-      redirect-url: http://localhost:3000/login/kakao
+      redirect-uri: http://localhost:3000/login/kakao
       token-uri: https://kauth.kakao.com/oauth/token
-
-
+      user-info-uri: https://kapi.kakao.com/v2/user/me
 
 spring.sql.init.platform: mysql
 server:
@@ -48,6 +52,7 @@ springdoc:
 
 jwt:
   secret-key: ${JWT_SECRET}  # JWT key. 수정해주세요
+
 
 ---
 spring:
@@ -73,6 +78,7 @@ spring:
       hibernate:
         format_sql: false
 
+
 ---
 spring:
   config:
@@ -89,4 +95,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
+  devtools:
+    livereload:
+      enabled: true
