@@ -27,6 +27,10 @@ public class BaseEntity {
     @Column(name = "state", nullable = false, length = 10)
     protected State state = State.ACTIVE;
 
+    public void delete() {
+        this.state = State.INACTIVE;
+    }
+
     public enum State {
         ACTIVE, INACTIVE;
     }

@@ -1,52 +1,76 @@
 package com.example.demo.src.user.entity;
 
 import com.example.demo.common.entity.BaseEntity;
+import com.example.demo.common.entity.OAuth;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Builder
-@AllArgsConstructor
 @Getter
-@Entity // 필수, Class 를 Database Table화 해주는 것이다
-@Table(name = "USER") // Table 이름을 명시해주지 않으면 class 이름을 Table 이름으로 대체한다.
+@Entity
 public class User extends BaseEntity {
 
-    @Id // PK를 의미하는 어노테이션
-    @Column(name = "id", nullable = false, updatable = false)
+    @Id
+    @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String email;
+    @Column(nullable = false, unique = true, length = 100)
+    private String loginId;
 
     @Column(nullable = false)
     private String password;
 
+    // 서비스 내에서 사용할 이름
     @Column(nullable = false, length = 30)
     private String name;
 
+    @Column(nullable = false, unique = true, length = 14)
+    private String phoneNumber;
+
     @Column(nullable = false)
+    private LocalDate birthDay;
+
+    private Timestamp lastLoginAt;
+
     private boolean isOAuth;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     @Builder.Default
-    private List<Authority> authorities = new ArrayList<>();
+    private UserState userState = UserState.ACTIVE;
 
+    @Column(nullable = false,updatable = false)
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private UserAuthority authority = UserAuthority.USER;
 
-
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private OAuth oAuth;
 
     public void updateName(String name) {
         this.name = name;
     }
 
-    public void deleteUser() {
-        this.state = State.INACTIVE;
+    public void updateLastLoginAt() {
+        this.lastLoginAt = Timestamp.from(Instant.now());
     }
 
+    public enum UserAuthority {
+        USER, ADMIN;
+    }
+
+    public enum UserState {
+        BANNED, DORMANT, ACTIVE
+    }
 
 }

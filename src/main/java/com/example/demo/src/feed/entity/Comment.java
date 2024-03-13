@@ -1,0 +1,32 @@
+package com.example.demo.src.feed.entity;
+
+import com.example.demo.src.user.entity.User;
+import lombok.*;
+
+import javax.persistence.*;
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@Builder
+@Getter
+@Entity
+public class Comment {
+    @Id
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String content;
+
+    @Builder.Default
+    private boolean isVisible = true;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(nullable = false, updatable = false)
+    private Feed feed;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(nullable = false, updatable = false)
+    private User user;
+}
