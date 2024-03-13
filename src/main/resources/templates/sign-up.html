@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo-sign-up</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h2>회원가입</h2>
+<form id="signupForm">
+    <p>아이디 : <input type="text" name="loginId" value="test1"></p>
+    <p>비밀번호 : <input type="text" name="password" value="password!11"></p>
+    <p>이름 : <input type="text" name="name" value="testname"></p>
+    <p>연락처 : <input type="text" name="phoneNumber" value="010-0000-0000"></p>
+    <p>생일 : <input type="text" name="birthday" value="1999-12-12"></p>
+    <p>사용약관 : <input type="text" name="dataTermsConsent" value="ture"></p>
+    <p>데이터 정책 : <input type="text" name="usageTermsConsent" value="true"></p>
+    <p>위치기반정보 : <input type="text" name="locationTermsConsent" value="true"></p>
+    <p>
+        <input type="button" id="submitBtn" value="가입하기">
+    </p>
+</form>
+
+<script>
+    // 현재 URL의 쿼리 문자열에서 "code" 파라미터 추출
+    var urlParams = new URLSearchParams(window.location.search);
+    var codeParam = urlParams.get('code');
+
+    // 폼 제출 버튼 클릭 이벤트 핸들러
+    $('#submitBtn').click(function() {
+        // 입력된 데이터를 JSON 형식으로 변환
+        var formData = {
+            loginId: $('input[name="loginId"]').val(),
+            password: $('input[name="password"]').val(),
+            name: $('input[name="name"]').val(),
+            phoneNumber: $('input[name="phoneNumber"]').val(),
+            birthday: $('input[name="birthday"]').val(),
+            dataTermsConsent: $('input[name="dataTermsConsent"]').val(),
+            usageTermsConsent: $('input[name="usageTermsConsent"]').val(),
+            locationTermsConsent: $('input[name="locationTermsConsent"]').val(),
+        };
+
+        // 서버에 AJAX 요청 보내기
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:3000/auth/kakao/sign-up?code=' + codeParam ,
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                console.log('요청 성공:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('요청 실패:', error);
+            }
+        });
+    });
+</script>
+</body>
+</html>

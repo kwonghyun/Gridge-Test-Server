@@ -10,7 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostLoginRes {
-
-    private Long id;
-    private String jwt;
+    private String accessToken;
 }

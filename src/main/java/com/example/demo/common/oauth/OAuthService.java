@@ -6,7 +6,6 @@ import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.src.user.OAuthRepository;
 import com.example.demo.src.user.entity.User;
 import com.example.demo.src.user.model.GetSocialOAuthRes;
-import com.example.demo.src.user.model.GetUserRes;
 import com.example.demo.src.user.model.KakaoOAuthToken;
 import com.example.demo.src.user.model.KakaoUser;
 import com.example.demo.utils.JwtService;
@@ -50,7 +49,7 @@ public class OAuthService {
     }
 
     public void redirectSignUpPage(String code) throws IOException {
-        String signUpPageUrl = "http://localhost:3000/sign-up";
+        String signUpPageUrl = "http://localhost:3000/sign-up?code=";
         response.sendRedirect(signUpPageUrl + code);
     }
 
@@ -62,17 +61,18 @@ public class OAuthService {
             case KAKAO: {
                 //구글로 일회성 코드를 보내 액세스 토큰이 담긴 응답객체를 받아옴
                 ResponseEntity<String> accessTokenResponse = kakaoOauth.requestAccessToken(code);
+                log.info("토큰 받아오기");
                 //응답 객체가 JSON형식으로 되어 있으므로, 이를 deserialization해서 자바 객체에 담을 것이다.
                 KakaoOAuthToken oAuthToken = kakaoOauth.getAccessToken(accessTokenResponse);
-                //액세스 토큰을 다시 구글로 보내 구글에 저장된 사용자 정보가 담긴 응답 객체를 받아온다.
-                ResponseEntity<String> userInfoResponse = kakaoOauth.requestUserInfo(oAuthToken.getAccess_token());
-                //다시 JSON 형식의 응답 객체를 자바 객체로 역직렬화한다.
-                KakaoUser kakaoUser = kakaoOauth.getUserInfo(userInfoResponse);
 
                 //우리 서버의 db와 대조하여 해당 user가 존재하는 지 확인한다.
-                if(checkOAuthUserByExternalId(kakaoUser.getEmail())) { // user가 DB에 있다면, 로그인 진행
+                if(checkOAuthUserByExternalId(oAuthToken.extractEmail())) { // user가 DB에 있다면, 로그인 진행
+                    //액세스 토큰을 다시 구글로 보내 구글에 저장된 사용자 정보가 담긴 응답 객체를 받아온다.
+                    ResponseEntity<String> userInfoResponse = kakaoOauth.requestUserInfo(oAuthToken.getAccess_token());
+                    //다시 JSON 형식의 응답 객체를 자바 객체로 역직렬화한다.
+                    KakaoUser kakaoUser = kakaoOauth.getUserInfo(userInfoResponse);
                     // 유저 정보 조회
-                    User user = getOAuthUserByExternalId(kakaoUser.getEmail());
+                    User user = getOAuthUserByExternalId(kakaoUser.getKakao_account().getEmail());
                     user.updateLastLoginAt();
 
                     //서버에 user가 존재하면 앞으로 회원 인가 처리를 위한 jwtToken을 발급한다.
@@ -82,7 +82,8 @@ public class OAuthService {
                     GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(jwtToken, user.getId(), oAuthToken.getAccess_token(), oAuthToken.getToken_type());
                     return getSocialOAuthRes;
                 }else { // user가 DB에 없다면, token을 쿼리스트링에 담아 회원가입 페이지로 리다이렉트
-                    redirectSignUpPage(code);
+                    redirectSignUpPage(oAuthToken.getAccess_token());
+                    return new GetSocialOAuthRes();
                 }
             }
             default: {
@@ -97,13 +98,12 @@ public class OAuthService {
 
         switch (socialLoginType) {
             case KAKAO: {
-                ResponseEntity<String> accessTokenResponse = kakaoOauth.requestAccessToken(code);
-                //응답 객체가 JSON형식으로 되어 있으므로, 이를 deserialization해서 자바 객체에 담을 것이다.
-                KakaoOAuthToken oAuthToken = kakaoOauth.getAccessToken(accessTokenResponse);
-                //액세스 토큰을 다시 구글로 보내 구글에 저장된 사용자 정보가 담긴 응답 객체를 받아온다.
-                ResponseEntity<String> userInfoResponse = kakaoOauth.requestUserInfo(oAuthToken.getAccess_token());
+                log.info("카카오에서 유저정보 파싱");
+                ResponseEntity<String> userInfoResponse = kakaoOauth.requestUserInfo(code);
                 //다시 JSON 형식의 응답 객체를 자바 객체로 역직렬화한다.
+                log.info("OAuth정보 저장");
                 KakaoUser kakaoUser = kakaoOauth.getUserInfo(userInfoResponse);
+
                 return oAuthRepository.save(kakaoUser.toEntity(user));
             }
             default: {

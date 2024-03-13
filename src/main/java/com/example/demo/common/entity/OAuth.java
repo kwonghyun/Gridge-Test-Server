@@ -28,7 +28,7 @@ public class OAuth extends BaseEntity {
     @Column(nullable = false)
     private String externalName;
 
-    private LocalDate externalBirthDay;
+    private Integer externalBirthDay;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
