@@ -3,7 +3,6 @@ package com.example.demo.utils;
 
 import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.common.response.BaseResponseStatus;
-import com.example.demo.src.user.entity.Authority;
 import com.example.demo.src.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -16,11 +15,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.example.demo.common.response.BaseResponseStatus.EMPTY_JWT;
 import static com.example.demo.common.response.BaseResponseStatus.INVALID_JWT;
@@ -36,11 +31,12 @@ public class JwtService {
     @param userId
     @return String
      */
-    public String createJwt(Long userId){
+    public String createJwt(Long userId, User.UserAuthority authority){
         Date now = new Date();
         return Jwts.builder()
                 .setHeaderParam("type","jwt")
-                .claim("userId",userId)
+                .claim("userId", userId)
+                .claim("authority", authority.name())
                 .setIssuedAt(now)
                 .setExpiration(new Date(System.currentTimeMillis()+1*(1000*60*60*24*365)))
                 .signWith(SignatureAlgorithm.HS256, JWT_SECRET_KEY)
@@ -61,56 +57,33 @@ public class JwtService {
         }
     }
 
+    public Jws<Claims> parseClaims(String jwt) {
+        try{
+            return Jwts.parser()
+                    .setSigningKey(JWT_SECRET_KEY)
+                    .parseClaimsJws(jwt);
+        } catch (Exception ignored) {
+            throw new BaseException(INVALID_JWT);
+        }
+    }
     /*
     JWT에서 userId 추출
     @return Long
     @throws BaseException
      */
-    public Long getUserId() throws BaseException{
+    public User getUser() throws BaseException{
         //1. JWT 추출
         String accessToken = getJwt();
         if(accessToken == null || accessToken.length() == 0){
             throw new BaseException(EMPTY_JWT);
         }
-
         // 2. JWT parsing
-        Jws<Claims> claims;
-        try{
-            claims = Jwts.parser()
-                    .setSigningKey(JWT_SECRET_KEY)
-                    .parseClaimsJws(accessToken);
-        } catch (Exception ignored) {
-            throw new BaseException(INVALID_JWT);
-        }
+        Jws<Claims> claims = parseClaims(accessToken);
 
         // 3. userIdx 추출
-        return claims.getBody().get("userId", Long.class);
-    }
-
-    public Claims parseClaims() {
-        String accessToken = getJwt();
-        return (Claims) Jwts.parser()
-                .setSigningKey(JWT_SECRET_KEY)
-                .parseClaimsJws(accessToken);
-    }
-
-    public User generateUserFromClaims(Claims claims) {
-        Long userId = Long.parseLong(claims.get("id").toString());
-        String name = claims.get("name").toString();
-
-        List<Authority> authorities = Arrays.stream(
-                claims.get("authorities").toString().split(","))
-                .map(
-                        authString -> Authority.builder().
-                                authorityType(Authority.AuthorityType.from(authString))
-                                .build()
-                )
-                .collect(Collectors.toList());
-
         return User.builder()
-                .id(userId)
-                .name(name)
-                .authorities(authorities)
+                .id(claims.getBody().get("userId", Long.class))
+                .authority(User.UserAuthority.USER)
                 .build();
     }
 

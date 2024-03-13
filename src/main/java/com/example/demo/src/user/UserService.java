@@ -1,13 +1,15 @@
 package com.example.demo.src.user;
 
 
-
-import com.example.demo.common.entity.BaseEntity.State;
+import com.example.demo.common.Constant;
+import com.example.demo.common.entity.OAuth;
 import com.example.demo.common.exceptions.BaseException;
+import com.example.demo.common.oauth.OAuthService;
 import com.example.demo.src.user.entity.User;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import com.example.demo.utils.SHA256;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,19 +22,22 @@ import static com.example.demo.common.entity.BaseEntity.State.ACTIVE;
 import static com.example.demo.common.response.BaseResponseStatus.*;
 
 // Service Create, Update, Delete 의 로직 처리
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final TermsRepository termsRepository;
+    private final OAuthService oAuthService;
     private final JwtService jwtService;
 
 
     //POST
-    public PostUserRes createUser(PostUserReq postUserReq) {
+    @Transactional
+    public User createUser(PostUserReq postUserReq) {
         //중복 체크
-        Optional<User> checkUser = userRepository.findByEmailAndState(postUserReq.getEmail(), ACTIVE);
+        Optional<User> checkUser = userRepository.findByLoginIdAndState(postUserReq.getLoginId(), ACTIVE);
         if(checkUser.isPresent() == true){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
@@ -45,33 +50,45 @@ public class UserService {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
 
-        User saveUser = userRepository.save(postUserReq.toEntity());
-        return new PostUserRes(saveUser.getId());
+        User saveUser = userRepository.save(postUserReq.toUserEntity());
+        termsRepository.save(postUserReq.toTermsEntity(saveUser));
+        return saveUser;
 
     }
 
-    public PostUserRes createOAuthUser(User user) {
-        User saveUser = userRepository.save(user);
-
-        // JWT 발급
-        String jwtToken = jwtService.createJwt(saveUser.getId());
-        return new PostUserRes(saveUser.getId(), jwtToken);
-
+    @Transactional
+    public PostUserRes createNormalUser(PostUserReq postUserReq) {
+        //중복 체크
+        User newUser = createUser(postUserReq);
+        return new PostUserRes(newUser.getId());
     }
 
+    @Transactional
+    public PostUserRes createOAuthUser(PostUserReq postUserReq, String oAuthAccessToken) throws JsonProcessingException {
+        User newUser = createUser(postUserReq);
+        OAuth oAuth = oAuthService.createOAuth(Constant.SocialLoginType.KAKAO, oAuthAccessToken, newUser);
+
+        return new PostUserRes(newUser.getId());
+    }
+
+    @Transactional
     public void modifyUserName(Long userId, PatchUserReq patchUserReq) {
         User user = userRepository.findByIdAndState(userId, ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
         user.updateName(patchUserReq.getName());
     }
 
+    @Transactional
     public void deleteUser(Long userId) {
         User user = userRepository.findByIdAndState(userId, ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
-        user.deleteUser();
+        user.delete();
+
+        if (user.isOAuth()) {
+            oAuthService.deleteByUserId(userId);
+        }
     }
 
-    @Transactional(readOnly = true)
     public List<GetUserRes> getUsers() {
         List<GetUserRes> getUserResList = userRepository.findAllByState(ACTIVE).stream()
                 .map(GetUserRes::new)
@@ -79,7 +96,6 @@ public class UserService {
         return getUserResList;
     }
 
-    @Transactional(readOnly = true)
     public List<GetUserRes> getUsersByEmail(String email) {
         List<GetUserRes> getUserResList = userRepository.findAllByEmailAndState(email, ACTIVE).stream()
                 .map(GetUserRes::new)
@@ -87,23 +103,16 @@ public class UserService {
         return getUserResList;
     }
 
-
-    @Transactional(readOnly = true)
     public GetUserRes getUser(Long userId) {
         User user = userRepository.findByIdAndState(userId, ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
         return new GetUserRes(user);
     }
 
-    @Transactional(readOnly = true)
-    public boolean checkUserByEmail(String email) {
-        Optional<User> result = userRepository.findByEmailAndState(email, ACTIVE);
-        if (result.isPresent()) return true;
-        return false;
-    }
 
+    @Transactional
     public PostLoginRes logIn(PostLoginReq postLoginReq) {
-        User user = userRepository.findByEmailAndState(postLoginReq.getEmail(), ACTIVE)
+        User user = userRepository.findByLoginIdAndState(postLoginReq.getLoginId(), ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
 
         String encryptPwd;
@@ -114,17 +123,13 @@ public class UserService {
         }
 
         if(user.getPassword().equals(encryptPwd)){
-            Long userId = user.getId();
-            String jwt = jwtService.createJwt(userId);
-            return new PostLoginRes(userId,jwt);
+            user.updateLastLoginAt();
+            String jwt = jwtService.createJwt(user.getId(), user.getAuthority());
+            return new PostLoginRes(jwt);
         } else{
             throw new BaseException(FAILED_TO_LOGIN);
         }
 
     }
 
-    public GetUserRes getUserByEmail(String email) {
-        User user = userRepository.findByEmailAndState(email, ACTIVE).orElseThrow(() -> new BaseException(NOT_FIND_USER));
-        return new GetUserRes(user);
-    }
 }

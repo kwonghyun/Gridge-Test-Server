@@ -3,6 +3,7 @@ package com.example.demo.src.user;
 
 import com.example.demo.common.Constant.SocialLoginType;
 import com.example.demo.common.oauth.OAuthService;
+import com.example.demo.common.response.BaseResponseStatus;
 import com.example.demo.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import com.example.demo.common.exceptions.BaseException;
@@ -11,12 +12,9 @@ import com.example.demo.src.user.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
-
-
-import static com.example.demo.common.response.BaseResponseStatus.*;
-import static com.example.demo.utils.ValidationRegex.isRegexEmail;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,18 +38,13 @@ public class UserController {
     // Body
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
-        // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
-        if(postUserReq.getEmail() == null){
-            return new BaseResponse<>(USERS_EMPTY_EMAIL);
-        }
-        //이메일 정규표현
-        if(!isRegexEmail(postUserReq.getEmail())){
-            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-        }
-        PostUserRes postUserRes = userService.createUser(postUserReq);
+    public BaseResponse<PostUserRes> createBasicUser(
+            @RequestBody @Valid PostUserReq postUserReq
+    ) {
+        PostUserRes postUserRes = userService.createNormalUser(postUserReq);
         return new BaseResponse<>(postUserRes);
     }
+
 
     /**
      * 회원 조회 API
@@ -97,9 +90,12 @@ public class UserController {
     @PatchMapping("/{userId}")
     public BaseResponse<String> modifyUserName(@PathVariable("userId") Long userId, @RequestBody PatchUserReq patchUserReq){
 
-        Long jwtUserId = jwtService.getUserId();
-
-        userService.modifyUserName(userId, patchUserReq);
+        Long jwtUserId = jwtService.getUser().getId();
+        if (jwtUserId.equals(userId)) {
+            userService.modifyUserName(userId, patchUserReq);
+        } else {
+            throw new BaseException(BaseResponseStatus.NOT_FIND_USER);
+        }
 
         String result = "수정 완료!!";
         return new BaseResponse<>(result);
@@ -112,9 +108,9 @@ public class UserController {
      * @return BaseResponse<String>
      */
     @ResponseBody
-    @DeleteMapping("/{userId}")
+    @PutMapping("/{userId}")
     public BaseResponse<String> deleteUser(@PathVariable("userId") Long userId){
-        Long jwtUserId = jwtService.getUserId();
+        Long jwtUserId = jwtService.getUser().getId();
 
         userService.deleteUser(userId);
 
@@ -143,8 +139,8 @@ public class UserController {
      * @return void
      */
     @GetMapping("/auth/{socialLoginType}/login")
-    public void socialLoginRedirect(@PathVariable(name="socialLoginType") String SocialLoginPath) throws IOException {
-        SocialLoginType socialLoginType= SocialLoginType.valueOf(SocialLoginPath.toUpperCase());
+    public void socialLoginRedirect(@PathVariable(name="socialLoginType") String socialLoginPath) throws IOException {
+        SocialLoginType socialLoginType= SocialLoginType.valueOf(socialLoginPath.toUpperCase());
         oAuthService.accessRequest(socialLoginType);
     }
 
@@ -162,7 +158,7 @@ public class UserController {
             @RequestParam(name = "code") String code) throws IOException, BaseException{
         log.info(">> 소셜 로그인 API 서버로부터 받은 code : {}", code);
         SocialLoginType socialLoginType = SocialLoginType.valueOf(socialLoginPath.toUpperCase());
-        GetSocialOAuthRes getSocialOAuthRes = oAuthService.oAuthLoginOrJoin(socialLoginType,code);
+        GetSocialOAuthRes getSocialOAuthRes = oAuthService.oAuthLoginOrRedirectToSignUp(socialLoginType,code);
         return new BaseResponse<>(getSocialOAuthRes);
     }
 
