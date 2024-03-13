@@ -26,7 +26,7 @@ public class Memo extends BaseEntity {
     // 양방향 매핑(선택 사항)
     // @BatchSize(size = 5) // BatchSize 설정 예제
     @OneToMany(mappedBy = "memo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    List<Comment> commentList = new ArrayList<Comment>();
+    List<CommentTest> commentTestList = new ArrayList<CommentTest>();
 
     public void makeMemo(MemoDto memoDto) {
         this.memo = memoDto.getMemo();
@@ -37,9 +37,9 @@ public class Memo extends BaseEntity {
     }
 
     // 연관관계 편의 메서드(선택 사항)
-    public void addComment(Comment comment) {
-        comment.setMemo(this);
-        commentList.add(comment);
+    public void addComment(CommentTest commentTest) {
+        commentTest.setMemo(this);
+        commentTestList.add(commentTest);
     }
 
 

@@ -1,6 +1,6 @@
 package com.example.demo.src.test.model;
 
-import com.example.demo.src.test.entity.Comment;
+import com.example.demo.src.test.entity.CommentTest;
 import com.example.demo.src.test.entity.Memo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +18,8 @@ public class PostCommentDto {
     @NotBlank(message = "코멘트를 입력해주세요.")
     private String comment;
 
-    public Comment toEntity(Memo memo) {
-        return Comment.builder()
+    public CommentTest toEntity(Memo memo) {
+        return CommentTest.builder()
                 .comment(this.comment)
                 .memo(memo)
                 .build();

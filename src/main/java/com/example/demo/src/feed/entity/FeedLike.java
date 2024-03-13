@@ -20,11 +20,11 @@ public class FeedLike {
     @Column(nullable = false)
     private boolean isLiked;
 
-    @Column(nullable = false, updatable = false)
+    @JoinColumn(nullable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @Column(nullable = false, updatable = false)
+    @JoinColumn(nullable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Feed feed;
 }

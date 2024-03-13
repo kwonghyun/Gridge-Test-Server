@@ -30,6 +30,7 @@ public class Files {
     private Type type;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, updatable = false)
     private Feed feed;
 
     public enum Type {

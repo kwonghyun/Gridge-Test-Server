@@ -23,10 +23,10 @@ public class Comment {
     private boolean isVisible = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false, updatable = false)
+    @JoinColumn(nullable = false, updatable = false)
     private Feed feed;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false, updatable = false)
+    @JoinColumn(nullable = false, updatable = false)
     private User user;
 }

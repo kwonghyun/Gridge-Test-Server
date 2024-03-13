@@ -2,9 +2,9 @@ package com.example.demo.src.test;
 
 import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.src.test.entity.Memo;
-import com.example.demo.src.test.model.PostCommentDto;
 import com.example.demo.src.test.model.GetMemoDto;
 import com.example.demo.src.test.model.MemoDto;
+import com.example.demo.src.test.model.PostCommentDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -23,7 +23,7 @@ import static com.example.demo.common.response.BaseResponseStatus.*;
 public class TestService {
 
     private final MemoRepository memoRepository;
-    private final CommentRepository commentRepository;
+    private final CommentTestRepository commentTsetRepository;
 
     public void createMemo(MemoDto memoDto) throws BaseException {
         //중복
@@ -68,6 +68,6 @@ public class TestService {
     public void createComment(PostCommentDto postCommentDto){
         Memo memo = memoRepository.findByIdAndState(postCommentDto.getMemoId(), ACTIVE).
                 orElseThrow(() -> new BaseException(INVALID_MEMO));
-        commentRepository.save(postCommentDto.toEntity(memo));
+        commentTsetRepository.save(postCommentDto.toEntity(memo));
     }
 }

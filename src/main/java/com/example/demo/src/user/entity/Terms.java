@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -31,7 +30,7 @@ public class Terms extends BaseEntity {
     private TermsConsentState consentState;
 
     @OneToOne
-    @Column(nullable = false, updatable = false)
+    @JoinColumn(nullable = false, updatable = false)
     private User user;
 
     public enum TermsConsentState {

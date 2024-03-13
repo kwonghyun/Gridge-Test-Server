@@ -2,13 +2,11 @@ package com.example.demo.common.entity;
 
 
 import com.example.demo.common.Constant;
-import com.example.demo.common.entity.BaseEntity;
 import com.example.demo.src.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -36,7 +34,7 @@ public class OAuth extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Constant.SocialLoginType socialLoginType;
 
-    @Column(nullable = false, updatable = false)
+    @JoinColumn(nullable = false, updatable = false)
     @OneToOne
     private User user;
 

@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Entity // 필수, Class 를 Database Table화 해주는 것이다
 @Table(name = "COMMENT") // Table 이름을 명시해주지 않으면 class 이름을 Table 이름으로 대체한다.
-public class Comment extends BaseEntity {
+public class CommentTest extends BaseEntity {
 
     @Id // PK를 의미하는 어노테이션
     @Column(name = "id", nullable = false, updatable = false)
@@ -30,7 +30,7 @@ public class Comment extends BaseEntity {
     }
 
     @Builder
-    public Comment(Long id, String comment, Memo memo) {
+    public CommentTest(Long id, String comment, Memo memo) {
         this.id = id;
         this.comment = comment;
         this.memo = memo;

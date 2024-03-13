@@ -96,8 +96,8 @@ public class UserService {
         return getUserResList;
     }
 
-    public List<GetUserRes> getUsersByEmail(String email) {
-        List<GetUserRes> getUserResList = userRepository.findAllByEmailAndState(email, ACTIVE).stream()
+    public List<GetUserRes> getUsersByLoginId(String loginId) {
+        List<GetUserRes> getUserResList = userRepository.findAllByLoginIdAndState(loginId, ACTIVE).stream()
                 .map(GetUserRes::new)
                 .collect(Collectors.toList());
         return getUserResList;

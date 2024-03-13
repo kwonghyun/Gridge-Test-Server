@@ -1,6 +1,6 @@
 package com.example.demo.src.test.model;
 
-import com.example.demo.src.test.entity.Comment;
+import com.example.demo.src.test.entity.CommentTest;
 import com.example.demo.src.test.entity.Memo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +22,8 @@ public class GetMemoDto {
     public GetMemoDto(Memo memo) {
         this.id = memo.getId();
         this.memo = memo.getMemo();
-        for(Comment comment : memo.getCommentList()) {
-            this.commentList.add(comment.getComment());
+        for(CommentTest commentTest : memo.getCommentTestList()) {
+            this.commentList.add(commentTest.getComment());
         }
     }
 }
