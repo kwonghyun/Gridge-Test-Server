@@ -5,11 +5,8 @@ import com.example.demo.common.entity.OAuth;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -40,7 +37,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private LocalDate birthDay;
 
-    private Timestamp lastLoginAt;
+    private LocalDateTime lastLoginAt;
 
     private boolean isOAuth;
 
@@ -62,7 +59,7 @@ public class User extends BaseEntity {
     }
 
     public void updateLastLoginAt() {
-        this.lastLoginAt = Timestamp.from(Instant.now());
+        this.lastLoginAt = LocalDateTime.now();
     }
 
     public enum UserAuthority {

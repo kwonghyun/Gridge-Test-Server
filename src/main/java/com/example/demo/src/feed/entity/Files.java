@@ -1,5 +1,6 @@
 package com.example.demo.src.feed.entity;
 
+import com.example.demo.common.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Entity
-public class Files {
+public class Files extends BaseEntity {
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

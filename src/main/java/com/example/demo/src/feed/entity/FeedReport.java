@@ -1,7 +1,6 @@
 package com.example.demo.src.feed.entity;
 
 import lombok.Builder;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.FetchType;

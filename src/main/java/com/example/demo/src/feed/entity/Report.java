@@ -1,5 +1,6 @@
 package com.example.demo.src.feed.entity;
 
+import com.example.demo.common.entity.BaseEntity;
 import com.example.demo.src.user.entity.User;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
 @Entity
-public abstract class Report {
+public abstract class Report extends BaseEntity {
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

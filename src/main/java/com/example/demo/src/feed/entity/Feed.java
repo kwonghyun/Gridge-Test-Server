@@ -1,5 +1,6 @@
 package com.example.demo.src.feed.entity;
 
+import com.example.demo.common.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 @Getter
 @Entity
-public class Feed {
+public class Feed extends BaseEntity {
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
