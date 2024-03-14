@@ -31,7 +31,6 @@ spring:
       token-uri: https://kauth.kakao.com/oauth/token
       user-info-uri: https://kapi.kakao.com/v2/user/me
 
-spring.sql.init.platform: mysql
 server:
   port: 3000
 
@@ -60,7 +59,7 @@ spring:
     activate:
       on-profile: "prod"
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: com.example.demo.common.config.CustomMySQLDialect
     hibernate:
       ddl-auto: none
       # create, update, create-drop, none 등의 옵션이 있습니다.
@@ -85,7 +84,7 @@ spring:
     activate:
       on-profile: "dev"
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: com.example.demo.common.config.CustomMySQLDialect
     hibernate:
       ddl-auto: create-drop
       naming:

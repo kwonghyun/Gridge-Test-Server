@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 
@@ -18,11 +17,11 @@ public class BaseEntity {
 
     @CreationTimestamp
     @Column(name = "createdAt", nullable = false, updatable = false)
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updatedAt", nullable = false)
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false, length = 10)
