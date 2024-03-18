@@ -1,12 +1,11 @@
-package com.example.demo.common.entity;
+package com.example.demo.src.user.entity;
 
 
 import com.example.demo.common.Constant;
-import com.example.demo.src.user.entity.User;
+import com.example.demo.common.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

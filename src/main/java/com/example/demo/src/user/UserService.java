@@ -2,9 +2,9 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.common.Constant;
-import com.example.demo.common.entity.OAuth;
 import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.common.oauth.OAuthService;
+import com.example.demo.src.user.entity.OAuth;
 import com.example.demo.src.user.entity.User;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
@@ -14,11 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static com.example.demo.common.entity.BaseEntity.State.ACTIVE;
 import static com.example.demo.common.response.BaseResponseStatus.*;
 
 // Service Create, Update, Delete 의 로직 처리
@@ -37,7 +34,7 @@ public class UserService {
     @Transactional
     public User createUser(PostUserReq postUserReq) {
         //중복 체크
-        Optional<User> checkUser = userRepository.findByLoginIdAndState(postUserReq.getLoginId(), ACTIVE);
+        Optional<User> checkUser = userRepository.findActiveUserByLoginId(postUserReq.getLoginId());
         if(checkUser.isPresent() == true){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
@@ -73,14 +70,14 @@ public class UserService {
 
     @Transactional
     public void modifyUserName(Long userId, PatchUserReq patchUserReq) {
-        User user = userRepository.findByIdAndState(userId, ACTIVE)
+        User user = userRepository.findActiveUserById(userId)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
         user.updateName(patchUserReq.getName());
     }
 
     @Transactional
     public void deleteUser(Long userId) {
-        User user = userRepository.findByIdAndState(userId, ACTIVE)
+        User user = userRepository.findActiveUserById(userId)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
         user.delete();
 
@@ -89,30 +86,16 @@ public class UserService {
         }
     }
 
-    public List<GetUserRes> getUsers() {
-        List<GetUserRes> getUserResList = userRepository.findAllByState(ACTIVE).stream()
-                .map(GetUserRes::new)
-                .collect(Collectors.toList());
-        return getUserResList;
-    }
-
-    public List<GetUserRes> getUsersByLoginId(String loginId) {
-        List<GetUserRes> getUserResList = userRepository.findAllByLoginIdAndState(loginId, ACTIVE).stream()
-                .map(GetUserRes::new)
-                .collect(Collectors.toList());
-        return getUserResList;
-    }
-
     public GetUserRes getUser(Long userId) {
-        User user = userRepository.findByIdAndState(userId, ACTIVE)
+        User user = userRepository.findActiveUserById(userId)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
         return new GetUserRes(user);
     }
 
 
     @Transactional
-    public PostLoginRes logIn(PostLoginReq postLoginReq) {
-        User user = userRepository.findByLoginIdAndState(postLoginReq.getLoginId(), ACTIVE)
+    public PostLoginRes login(PostLoginReq postLoginReq) {
+        User user = userRepository.findActiveUserByLoginId(postLoginReq.getLoginId())
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
 
         String encryptPwd;

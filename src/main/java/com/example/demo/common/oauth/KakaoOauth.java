@@ -23,19 +23,19 @@ import java.util.stream.Collectors;
 public class KakaoOauth implements SocialOauth {
 
     //applications.yml 에서 value annotation을 통해서 값을 받아온다.
-    @Value("${spring.OAuth2.kakao.login-uri}")
+    @Value("${OAuth2.kakao.login-uri}")
     private String KAKAO_LOGIN_URI;
 
-    @Value("${spring.OAuth2.kakao.client-id}")
+    @Value("${OAuth2.kakao.client-id}")
     private String KAKAO_CLIENT_ID;
 
-    @Value("${spring.OAuth2.kakao.redirect-uri}")
+    @Value("${OAuth2.kakao.redirect-uri}")
     private String KAKAO_REDIRECT_URI;
 
-    @Value("${spring.OAuth2.kakao.token-uri}")
+    @Value("${OAuth2.kakao.token-uri}")
     private String KAKAO_TOKEN_URI;
 
-    @Value("${spring.OAuth2.kakao.user-info-uri}")
+    @Value("${OAuth2.kakao.user-info-uri}")
     private String KAKAO_USER_INFO_URI;
 
     private final ObjectMapper objectMapper;
@@ -58,11 +58,6 @@ public class KakaoOauth implements SocialOauth {
         log.info("redirectURL = {}", redirectURL);
 
         return redirectURL;
-        /*
-         * https://accounts.google.com/o/oauth2/v2/auth?scope=profile&response_type=code
-         * &client_id="할당받은 id"&redirect_uri="access token 처리")
-         * 로 Redirect URL을 생성하는 로직을 구성
-         * */
     }
 
     public ResponseEntity<String> requestAccessToken(String code) {

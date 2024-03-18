@@ -1,7 +1,6 @@
 package com.example.demo.src.user.entity;
 
 import com.example.demo.common.entity.BaseEntity;
-import com.example.demo.common.entity.OAuth;
 import lombok.*;
 
 import javax.persistence.*;
@@ -47,8 +46,8 @@ public class User extends BaseEntity {
     private UserState userState = UserState.ACTIVE;
 
     @Column(nullable = false,updatable = false)
-    @Builder.Default
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private UserAuthority authority = UserAuthority.USER;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

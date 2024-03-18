@@ -2,17 +2,25 @@ package com.example.demo.src.user;
 
 import com.example.demo.src.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
-
-import static com.example.demo.common.entity.BaseEntity.State;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByIdAndState(Long id, State state);
-    Optional<User> findByLoginIdAndState(String loginId, State state);
-    List<User> findAllByLoginIdAndState(String loginId, State state);
-    List<User> findAllByState(State state);
+    @Query(
+            "SELECT u FROM  User u " +
+                    "WHERE (u.id = :userId) " +
+                    "AND (u.state = com.example.demo.common.entity.BaseEntity$State.ACTIVE) "
+    )
+    Optional<User> findActiveUserById(@Param("userId") Long userId);
+
+    @Query(
+            "SELECT u FROM User u " +
+                    "WHERE (u.loginId = :loginId) " +
+                    "AND (u.state = com.example.demo.common.entity.BaseEntity$State.ACTIVE) "
+    )
+    Optional<User> findActiveUserByLoginId(@Param("loginId") String loginId);
 
 }

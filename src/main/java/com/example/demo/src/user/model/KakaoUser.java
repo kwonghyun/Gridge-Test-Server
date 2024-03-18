@@ -1,7 +1,7 @@
 package com.example.demo.src.user.model;
 
 import com.example.demo.common.Constant;
-import com.example.demo.common.entity.OAuth;
+import com.example.demo.src.user.entity.OAuth;
 import com.example.demo.src.user.entity.User;
 import lombok.Getter;
 

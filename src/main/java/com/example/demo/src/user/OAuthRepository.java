@@ -1,7 +1,7 @@
 package com.example.demo.src.user;
 
 import com.example.demo.common.entity.BaseEntity;
-import com.example.demo.common.entity.OAuth;
+import com.example.demo.src.user.entity.OAuth;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package com.example.demo.common.oauth;
 
 import com.example.demo.common.Constant;
-import com.example.demo.common.entity.OAuth;
+import com.example.demo.src.user.entity.OAuth;
 import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.src.user.OAuthRepository;
 import com.example.demo.src.user.entity.User;
@@ -49,7 +49,7 @@ public class OAuthService {
     }
 
     public void redirectSignUpPage(String code) throws IOException {
-        String signUpPageUrl = "http://localhost:3000/sign-up?code=";
+        String signUpPageUrl = "/sign-up?code=";
         response.sendRedirect(signUpPageUrl + code);
     }
 
