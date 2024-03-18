@@ -8,7 +8,7 @@ import com.example.demo.src.oauth.model.KakaoUser;
 import com.example.demo.src.user.entity.User;
 import com.example.demo.src.user.model.GetSocialOAuthRes;
 import com.example.demo.src.user.model.PostUserReq;
-import com.example.demo.src.user.service.UserService;
+import com.example.demo.src.user.UserService;
 import com.example.demo.utils.JwtService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;

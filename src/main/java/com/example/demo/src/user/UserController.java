@@ -5,7 +5,6 @@ import com.example.demo.common.response.BaseResponse;
 import com.example.demo.src.user.model.PostLoginReq;
 import com.example.demo.src.user.model.PostLoginRes;
 import com.example.demo.src.user.model.PostUserReq;
-import com.example.demo.src.user.service.UserService;
 import com.example.demo.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

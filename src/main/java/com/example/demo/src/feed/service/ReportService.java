@@ -11,7 +11,7 @@ import com.example.demo.src.feed.model.PostReportFeedReq;
 import com.example.demo.src.feed.repository.CommentRepository;
 import com.example.demo.src.feed.repository.FeedRepository;
 import com.example.demo.src.feed.repository.ReportRepository;
-import com.example.demo.src.user.repository.UserRepository;
+import com.example.demo.src.user.UserRepository;
 import com.example.demo.src.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

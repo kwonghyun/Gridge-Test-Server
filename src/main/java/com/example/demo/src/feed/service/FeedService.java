@@ -7,7 +7,7 @@ import com.example.demo.src.feed.entity.FeedLike;
 import com.example.demo.src.feed.model.*;
 import com.example.demo.src.feed.repository.FeedLikeRepository;
 import com.example.demo.src.feed.repository.FeedRepository;
-import com.example.demo.src.user.repository.UserRepository;
+import com.example.demo.src.user.UserRepository;
 import com.example.demo.src.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
