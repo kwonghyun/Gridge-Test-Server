@@ -30,7 +30,7 @@ public enum BaseResponseStatus {
     INVALID_MEMO(false,HttpStatus.NOT_FOUND.value(), "존재하지 않는 메모입니다."),
     FAILED_TO_LOGIN(false,HttpStatus.NOT_FOUND.value(),"없는 아이디거나 비밀번호가 틀렸습니다."),
     EMPTY_JWT(false, HttpStatus.UNAUTHORIZED.value(), "JWT를 입력해주세요."),
-    EXPIRED_JWT(false, HttpStatus.UNAUTHORIZED.value(), "유효기간이 만료된 JWT입니다."),
+    EXPIRED_JWT(false, HttpStatus.UNAUTHORIZED.value(), "유효기간이 만료된 JWT입니다. 다시 로그인 해주세요."),
     INVALID_JWT(false, HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 JWT입니다."),
     UNSUPPORTED_JWT(false, HttpStatus.UNAUTHORIZED.value(), "지원하지 않는 형식의 JWT입니다."),
     INVALID_SIGNATURE_JWT(false, HttpStatus.UNAUTHORIZED.value(), "서명이 잘못된 JWT입니다."),
@@ -40,6 +40,22 @@ public enum BaseResponseStatus {
     NOT_FIND_OAUTH_USER(false,HttpStatus.NOT_FOUND.value(),"일치하는 소셜 유저 정보가 없습니다."),
     INVALID_OAUTH_TYPE(false, HttpStatus.BAD_REQUEST.value(), "알 수 없는 소셜 로그인 형식입니다."),
 
+    NOT_FIND_FEED(false,HttpStatus.NOT_FOUND.value(),"일치하는 피드가 없습니다."),
+    NOT_AUTHORIZED_FEED(false,HttpStatus.UNAUTHORIZED.value(), "접근 권한이 없는 피드입니다."),
+
+    NOT_FIND_COMMENT(false,HttpStatus.NOT_FOUND.value(),"일치하는 댓글이 없습니다."),
+    NOT_FIND_FEED_LIKE(false,HttpStatus.NOT_FOUND.value(),"일치하는 좋아요가 없습니다."),
+
+    NOT_AUTHORIZED_COMMENT(false,HttpStatus.UNAUTHORIZED.value(), "접근 권한이 없는 댓글입니다."),
+
+    NOT_MATCH_FEED_MEDIA_CONTENT(false,HttpStatus.BAD_REQUEST.value(), "요청한 피드의 사진 또는 동영상이 아닙니다."),
+    UNSUPPORTED_MEDIA_TYPE(false,HttpStatus.BAD_REQUEST.value(), "지원하는 형식의 사진(\"jpg\", \"jpeg\", \"png\", \"gif\") 또는 동영상(\"mp4\", \"avi\", \"mov\", \"mkv\")이 아닙니다."),
+    TOO_MANY_MEDIA_CONTENT(false,HttpStatus.BAD_REQUEST.value(), "사진 또는 동영상이 너무 많습니다. 파일은 10개까지 선택 가능합니다."),
+    NOT_MATCH_FEED_COMMENT(false,HttpStatus.BAD_REQUEST.value(), "요청한 피드의 댓글이 아닙니다."),
+    NOT_FIND_MEDIA_CONTENT(false,HttpStatus.NOT_FOUND.value(),"일치하는 사진 또는 동영상이 없습니다."),
+
+    ALREADY_REPORTED_FEED(false,HttpStatus.BAD_REQUEST.value(),"이미 신고한 피드입니다."),
+    ALREADY_REPORTED_COMMENT(false,HttpStatus.BAD_REQUEST.value(),"이미 신고한 댓글입니다."),
 
 
     /**
@@ -50,6 +66,7 @@ public enum BaseResponseStatus {
     PASSWORD_ENCRYPTION_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "비밀번호 복호화에 실패하였습니다."),
 
+    UPLOAD_FAIL_MEDIA_CONTENT(false,HttpStatus.INTERNAL_SERVER_ERROR.value(), "파일 업로드에 실패했습니다."),
 
     MODIFY_FAIL_USERNAME(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),"유저네임 수정 실패"),
     DELETE_FAIL_USERNAME(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),"유저 삭제 실패"),

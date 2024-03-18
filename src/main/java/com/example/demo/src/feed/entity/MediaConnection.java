@@ -11,30 +11,20 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Entity
-public class Files extends BaseEntity {
+public class MediaConnection extends BaseEntity {
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, updatable = false)
-    private String url;
-
-    @Column(nullable = false, updatable = false)
-    private Float size;
-
-    @Column(nullable = false, updatable = false)
-    private String ext;
-
-    @Column(nullable = false, updatable = false)
-    @Enumerated(EnumType.STRING)
-    private Type type;
+    @JoinColumn(nullable = false)
+    private Integer displayOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, updatable = false)
     private Feed feed;
 
-    public enum Type {
-        IMAGE, VIDEO;
-    }
+    @OneToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private MediaContent mediaContent;
 }
