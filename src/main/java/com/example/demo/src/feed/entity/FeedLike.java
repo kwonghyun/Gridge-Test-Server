@@ -19,7 +19,8 @@ public class FeedLike extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private boolean isLiked;
+    @Builder.Default
+    private boolean liked = true;
 
     @JoinColumn(nullable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,4 +29,8 @@ public class FeedLike extends BaseEntity {
     @JoinColumn(nullable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Feed feed;
+
+    public void updateLiked() {
+        this.liked = !this.liked;
+    }
 }
