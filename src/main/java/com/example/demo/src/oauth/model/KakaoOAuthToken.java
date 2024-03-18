@@ -1,4 +1,4 @@
-package com.example.demo.src.user.model;
+package com.example.demo.src.oauth.model;
 
 import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.common.response.BaseResponseStatus;
@@ -25,7 +25,7 @@ public class KakaoOAuthToken {
     private String token_type;
     private String id_token;
 
-    public String extractEmail() throws UnsupportedEncodingException {
+    public String extractEmail() {
         String payload = id_token.split("\\.")[1];
         String decodedPayload;
         try {

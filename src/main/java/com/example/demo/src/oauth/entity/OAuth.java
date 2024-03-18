@@ -1,8 +1,9 @@
-package com.example.demo.src.user.entity;
+package com.example.demo.src.oauth.entity;
 
 
 import com.example.demo.common.Constant;
 import com.example.demo.common.entity.BaseEntity;
+import com.example.demo.src.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,7 +34,7 @@ public class OAuth extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Constant.SocialLoginType socialLoginType;
 
-    @JoinColumn(nullable = false, updatable = false)
+    @JoinColumn(nullable = false, updatable = false, unique = true)
     @OneToOne
     private User user;
 

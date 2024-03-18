@@ -1,6 +1,7 @@
 package com.example.demo.src.user.entity;
 
 import com.example.demo.common.entity.BaseEntity;
+import com.example.demo.src.oauth.entity.OAuth;
 import lombok.*;
 
 import javax.persistence.*;

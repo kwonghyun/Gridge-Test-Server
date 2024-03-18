@@ -1,15 +1,14 @@
-package com.example.demo.src.user;
+package com.example.demo.src.user.service;
 
 
-import com.example.demo.common.Constant;
 import com.example.demo.common.exceptions.BaseException;
-import com.example.demo.common.oauth.OAuthService;
-import com.example.demo.src.user.entity.OAuth;
+import com.example.demo.src.oauth.OAuthService;
 import com.example.demo.src.user.entity.User;
 import com.example.demo.src.user.model.*;
+import com.example.demo.src.user.repository.TermsRepository;
+import com.example.demo.src.user.repository.UserRepository;
 import com.example.demo.utils.JwtService;
 import com.example.demo.utils.SHA256;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,22 +49,6 @@ public class UserService {
         User saveUser = userRepository.save(postUserReq.toUserEntity());
         termsRepository.save(postUserReq.toTermsEntity(saveUser));
         return saveUser;
-
-    }
-
-    @Transactional
-    public PostUserRes createNormalUser(PostUserReq postUserReq) {
-        //중복 체크
-        User newUser = createUser(postUserReq);
-        return new PostUserRes(newUser.getId());
-    }
-
-    @Transactional
-    public PostUserRes createOAuthUser(PostUserReq postUserReq,  Constant.SocialLoginType socialLoginType,String oAuthAccessToken) throws JsonProcessingException {
-        User newUser = createUser(postUserReq);
-        OAuth oAuth = oAuthService.createOAuth(socialLoginType, oAuthAccessToken, newUser);
-
-        return new PostUserRes(newUser.getId());
     }
 
     @Transactional

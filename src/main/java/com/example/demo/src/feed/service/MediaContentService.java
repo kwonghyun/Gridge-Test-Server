@@ -10,7 +10,7 @@ import com.example.demo.src.feed.model.PostFeedMediaReq;
 import com.example.demo.src.feed.model.PostMediaContentRes;
 import com.example.demo.src.feed.repository.MediaConnectionRepository;
 import com.example.demo.src.feed.repository.MediaContentRepository;
-import com.example.demo.src.user.UserRepository;
+import com.example.demo.src.user.repository.UserRepository;
 import com.example.demo.src.user.entity.User;
 import com.example.demo.utils.FileUtil;
 import lombok.RequiredArgsConstructor;

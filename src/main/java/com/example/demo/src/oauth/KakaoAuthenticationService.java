@@ -1,7 +1,7 @@
-package com.example.demo.common.oauth;
+package com.example.demo.src.oauth;
 
-import com.example.demo.src.user.model.KakaoOAuthToken;
-import com.example.demo.src.user.model.KakaoUser;
+import com.example.demo.src.oauth.model.KakaoOAuthToken;
+import com.example.demo.src.oauth.model.KakaoUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class KakaoOauth implements SocialOauth {
+public class KakaoAuthenticationService implements SocialAuthenticationService {
 
     //applications.yml 에서 value annotation을 통해서 값을 받아온다.
     @Value("${OAuth2.kakao.login-uri}")

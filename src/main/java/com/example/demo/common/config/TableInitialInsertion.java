@@ -1,6 +1,6 @@
 package com.example.demo.common.config;
 
-import com.example.demo.src.user.UserRepository;
+import com.example.demo.src.user.repository.UserRepository;
 import com.example.demo.src.user.entity.User;
 import com.example.demo.utils.SHA256;
 import lombok.RequiredArgsConstructor;
