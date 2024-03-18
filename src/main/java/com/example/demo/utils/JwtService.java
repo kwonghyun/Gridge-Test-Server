@@ -4,12 +4,9 @@ package com.example.demo.utils;
 import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.common.response.BaseResponseStatus;
 import com.example.demo.src.user.entity.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -18,9 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 import static com.example.demo.common.response.BaseResponseStatus.EMPTY_JWT;
-import static com.example.demo.common.response.BaseResponseStatus.INVALID_JWT;
 
 @Service
+@Slf4j
 public class JwtService {
 
     @Value("${jwt.secret-key}")
@@ -44,47 +41,55 @@ public class JwtService {
     }
 
     /*
-    Header에서 Authentication 으로 JWT 추출
+    Header에서 X-ACCESS-TOKEN 으로 JWT 추출
     @return String
      */
     public String getJwt(){
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.split(" ")[1];
-        } else {
-            throw new BaseException(BaseResponseStatus.EMPTY_JWT);
+        String jwt = request.getHeader("X-ACCESS-TOKEN");
+        if (jwt == null || jwt.length() == 0) {
+            throw new BaseException(EMPTY_JWT);
         }
+        return jwt;
+    }
+
+    public void validateJwt() {
+        String jwt = getJwt();
+        parseClaims(jwt);
     }
 
     public Jws<Claims> parseClaims(String jwt) {
-        try{
+        try {
             return Jwts.parser()
                     .setSigningKey(JWT_SECRET_KEY)
                     .parseClaimsJws(jwt);
-        } catch (Exception ignored) {
-            throw new BaseException(INVALID_JWT);
+        } catch (SignatureException | MalformedJwtException e) {
+            log.info("JWT 서명이 잘못되었습니다.");
+            throw new BaseException(BaseResponseStatus.INVALID_SIGNATURE_JWT);
+        } catch (ExpiredJwtException e) {
+            log.info("JWT 토큰이 만료되었습니다.");
+            throw new BaseException(BaseResponseStatus.EXPIRED_JWT);
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 토큰입니다.");
+            throw new BaseException(BaseResponseStatus.UNSUPPORTED_JWT);
+        } catch (IllegalArgumentException e) {
+            log.info("잘못된 토큰입니다.");
+            throw new BaseException(BaseResponseStatus.INVALID_JWT);
         }
     }
+
     /*
     JWT에서 userId 추출
     @return Long
     @throws BaseException
      */
-    public User getUser() throws BaseException{
+    public Long getUserId() {
         //1. JWT 추출
         String accessToken = getJwt();
-        if(accessToken == null || accessToken.length() == 0){
-            throw new BaseException(EMPTY_JWT);
-        }
         // 2. JWT parsing
         Jws<Claims> claims = parseClaims(accessToken);
-
-        // 3. userIdx 추출
-        return User.builder()
-                .id(claims.getBody().get("userId", Long.class))
-                .authority(User.UserAuthority.USER)
-                .build();
+        // 3. userId 추출
+        return claims.getBody().get("userId", Long.class);
     }
 
 }
