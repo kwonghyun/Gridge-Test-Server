@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+
+    <meta charset="UTF-8"/>
+    <title>Subscription Payment</title>
+</head>
+<body>
+<button id="pay-btn">결제하기</button>
+<!-- 결제하기 버튼 생성 -->
+
+<script>
+    var IMP = window.IMP;
+    IMP.init("imp06817208");
+    const params = new URLSearchParams(window.location.search);
+    const accessToken = params.get('accessToken');
+    console.log(accessToken);
+
+    $('#pay-btn').click(function() {
+        $.ajax({
+            type: 'POST',
+            url: `app/payments` ,
+            contentType: 'application/json',
+            headers: {'X-Access-Token': accessToken},
+            success: function(response) {
+                if (response.isSuccess === true) {
+                    var requestBody = response.result;
+                    IMP.request_pay({
+                        pg: requestBody.pg,
+                        pay_method: requestBody.payMethod,
+                        merchant_uid: requestBody.merchantId,
+                        name: requestBody.name,
+                        amount: requestBody.amount,
+                        customer_uid: requestBody.customerUid
+                    }, function(rsp) {
+                        console.log(rsp);
+                        var response = {
+                            success: rsp.success,
+                            imp_uid: rsp.imp_uid,
+                            merchant_uid: rsp.merchant_uid,
+                            pay_method: rsp.pay_method,
+                            pg_provider: rsp.pg_provider,
+                            pg_type: rsp.pg_type,
+                            error_msg: rsp.error_msg,
+                            customer_uid: rsp.customer_uid,
+                            status: rsp.status,
+                            paid_amount: rsp.amount,
+                            currency: rsp.currency
+                        };
+                        $.ajax({
+                            type: 'POST',
+                            url: `app/payments/result`,
+                            contentType: 'application/json',
+                            headers: {'X-Access-Token': accessToken},
+                            data: JSON.stringify(response)
+                        });
+                        //결제 성공 시
+                        if (rsp.success) {
+                            var msg = '결제가 완료되었습니다.';
+                        } else {
+                            var msg = '결제가 실패했습니다.\n';
+                            msg += rsp.error_msg
+                        }
+                        alert(msg);
+                    });
+                } else {
+                    console.error('결제에 문제가 생겼습니다.');
+                    alert('결제에 실패했습니다. ');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('요청 실패:', error);
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

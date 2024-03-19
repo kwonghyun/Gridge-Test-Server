@@ -1,6 +1,7 @@
 package com.example.demo.src.subscription.entity;
 
 import com.example.demo.common.entity.BaseEntity;
+import com.example.demo.src.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,11 +27,16 @@ public class SubscriptionHistory extends BaseEntity {
     private LocalDate previousPaymentDate;
     // 정기 결제일
     private Integer paymentDay;
+    @Column(nullable = false, updatable = false)
     private SubscriptionState subscriptionState;
 
     @OneToOne
     @JoinColumn(nullable = false, updatable = false)
     private PaymentHistory paymentHistory;
+
+    @OneToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private User user;
 
     public enum SubscriptionState {
         SUBSCRIBED, CANCELLED;

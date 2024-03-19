@@ -38,12 +38,16 @@ public enum BaseResponseStatus {
     NOT_FIND_USER(false,HttpStatus.NOT_FOUND.value(),"일치하는 유저가 없습니다."),
     INVALID_OAUTH_TOKEN(false, HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 소셜 토큰입니다."),
     NOT_FIND_OAUTH_USER(false,HttpStatus.NOT_FOUND.value(),"일치하는 소셜 유저 정보가 없습니다."),
-    INVALID_OAUTH_TYPE(false, HttpStatus.BAD_REQUEST.value(), "알 수 없는 소셜 로그인 형식입니다."),
+    INVALID_OAUTH_TYPE(false, HttpStatus.BAD_REQUEST.value(), "유효하지 않은 소셜 로그인 형식입니다."),
+
 
     NOT_FIND_FEED(false,HttpStatus.NOT_FOUND.value(),"일치하는 피드가 없습니다."),
+    NOT_FIND_PAYMENT(false,HttpStatus.NOT_FOUND.value(),"일치하는 결제기록이 없습니다."),
+    FAKE_PAYMENT_INFO(false,HttpStatus.BAD_REQUEST.value(),"위조된 결제가 발생했습니다."),
     NOT_AUTHORIZED_FEED(false,HttpStatus.UNAUTHORIZED.value(), "접근 권한이 없는 피드입니다."),
 
     NOT_FIND_COMMENT(false,HttpStatus.NOT_FOUND.value(),"일치하는 댓글이 없습니다."),
+    NOT_FIND_SUBSCRIPTION(false,HttpStatus.NOT_FOUND.value(),"구독 이력이 없습니다."),
     NOT_FIND_FEED_LIKE(false,HttpStatus.NOT_FOUND.value(),"일치하는 좋아요가 없습니다."),
 
     NOT_AUTHORIZED_COMMENT(false,HttpStatus.UNAUTHORIZED.value(), "접근 권한이 없는 댓글입니다."),
@@ -67,6 +71,7 @@ public enum BaseResponseStatus {
     PASSWORD_DECRYPTION_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "비밀번호 복호화에 실패하였습니다."),
 
     UPLOAD_FAIL_MEDIA_CONTENT(false,HttpStatus.INTERNAL_SERVER_ERROR.value(), "파일 업로드에 실패했습니다."),
+    GET_PORT_ONE_TOKEN_FAIL(false,HttpStatus.INTERNAL_SERVER_ERROR.value(), "포트원 토큰 불러오기에 실패했습니다."),
 
     MODIFY_FAIL_USERNAME(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),"유저네임 수정 실패"),
     DELETE_FAIL_USERNAME(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),"유저 삭제 실패"),

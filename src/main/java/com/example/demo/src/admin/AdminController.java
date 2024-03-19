@@ -1,6 +1,6 @@
 package com.example.demo.src.admin;
 
-import com.example.demo.src.feed.FeedService;
+import com.example.demo.src.feed.service.FeedService;
 import com.example.demo.src.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;

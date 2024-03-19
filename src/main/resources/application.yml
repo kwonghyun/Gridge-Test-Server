@@ -49,6 +49,10 @@ springdoc:
 jwt:
   secret-key: ${JWT_SECRET}  # JWT key. 수정해주세요
 
+portOne:
+  restApiKey: ${PORT_ONE_REST_API_KEY}
+  secret: ${PORT_ONE_SECRET}
+  hostname: ${PORT_ONE_HOSTNAME}
 ---
 spring:
   config:
