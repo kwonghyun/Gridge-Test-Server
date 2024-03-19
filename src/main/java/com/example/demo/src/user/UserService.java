@@ -2,6 +2,7 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.common.exceptions.BaseException;
+import com.example.demo.src.oauth.entity.OAuth;
 import com.example.demo.src.user.entity.User;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
@@ -48,29 +49,13 @@ public class UserService {
     }
 
     @Transactional
-    public void modifyUserName(Long userId, PatchUserReq patchUserReq) {
-        User user = userRepository.findActiveUserById(userId)
-                .orElseThrow(() -> new BaseException(NOT_FIND_USER));
-        user.updateName(patchUserReq.getName());
-    }
-
-    @Transactional
     public void deleteUser(Long userId) {
         User user = userRepository.findActiveUserById(userId)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
         user.delete();
-
-        if (user.isOAuth()) {
-            user.getOAuth().delete();
-        }
+        Optional<OAuth> optionalOAuth = Optional.ofNullable(user.getOAuth());
+        optionalOAuth.ifPresent(oAuth -> oAuth.delete());
     }
-
-    public GetUserRes getUser(Long userId) {
-        User user = userRepository.findActiveUserById(userId)
-                .orElseThrow(() -> new BaseException(NOT_FIND_USER));
-        return new GetUserRes(user);
-    }
-
 
     @Transactional
     public PostLoginRes login(PostLoginReq postLoginReq) {
@@ -86,7 +71,7 @@ public class UserService {
 
         if(user.getPassword().equals(encryptPwd)){
             user.updateLastLoginAt();
-            String jwt = jwtService.createJwt(user.getId(), user.getAuthority());
+            String jwt = jwtService.createJwt(user.getId(), user.getName(), user.getAuthority());
             return new PostLoginRes(jwt);
         } else{
             throw new BaseException(FAILED_TO_LOGIN);

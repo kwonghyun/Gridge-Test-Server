@@ -22,7 +22,6 @@ public class TableInitialInsertion {
                         .password(SHA256.encrypt("qwerqwer1!"))
                         .name("테스트유저")
                         .phoneNumber("010-0000-0000")
-                        .isOAuth(false)
                         .birthDay(LocalDate.parse("1999-12-12"))
                         .build()
         );

@@ -39,8 +39,6 @@ public class User extends BaseEntity {
 
     private LocalDateTime lastLoginAt;
 
-    private boolean isOAuth;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default

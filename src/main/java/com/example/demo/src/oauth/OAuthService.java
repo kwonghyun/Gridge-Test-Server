@@ -50,8 +50,8 @@ public class OAuthService {
         response.sendRedirect(redirectURL);
     }
 
-    public void redirectSignUpPage(String code) throws IOException {
-        String signUpPageUrl = "/sign-up?code=";
+    public void redirectSignUpPage(Constant.SocialLoginType socialLoginType, String code) throws IOException {
+        String signUpPageUrl = "/sign-up?loginType="+ socialLoginType.name().toLowerCase() + "&code=";
         response.sendRedirect(signUpPageUrl + code);
     }
 
@@ -74,17 +74,17 @@ public class OAuthService {
                     //다시 JSON 형식의 응답 객체를 자바 객체로 역직렬화한다.
                     KakaoUser kakaoUser = kakaoAuthenticationService.getUserInfo(userInfoResponse);
                     // 유저 정보 조회
-                    User user = getOAuthUserByExternalId(kakaoUser.getKakao_account().getEmail());
+                    User user = getOAuthUserByExternalId(kakaoUser.getKakaoAccount().getEmail());
                     user.updateLastLoginAt();
 
                     //서버에 user가 존재하면 앞으로 회원 인가 처리를 위한 jwtToken을 발급한다.
-                    String jwtToken = jwtService.createJwt(user.getId(), user.getAuthority());
+                    String accessToken = jwtService.createJwt(user.getId(), user.getName(), user.getAuthority());
 
                     //액세스 토큰과 jwtToken, 이외 정보들이 담긴 자바 객체를 다시 전송한다.
-                    GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(jwtToken, user.getId(), oAuthToken.getAccess_token(), oAuthToken.getToken_type());
+                    GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(accessToken, user.getId(), oAuthToken.getAccess_token(), oAuthToken.getToken_type());
                     return getSocialOAuthRes;
                 }else { // user가 DB에 없다면, token을 쿼리스트링에 담아 회원가입 페이지로 리다이렉트
-                    redirectSignUpPage(oAuthToken.getAccess_token());
+                    redirectSignUpPage(socialLoginType, oAuthToken.getAccess_token());
                     return new GetSocialOAuthRes();
                 }
             }

@@ -1,11 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta charset="UTF-8">
     <title>demo-login</title>
 </head>
 <body>
 <h2>로그인</h2>
-<a href="/auth/kakao/login">카카오 로그인</a>
+<form id="loginForm">
+    <p>아이디 : <input type="text" name="loginId" value="qwerqwer"></p>
+    <p>비밀번호 : <input type="text" name="password" value="qwerqwer1!"></p>
+    <p>
+        <input type="button" id="submitBtn" value="로그인">
+    </p>
+</form>
+<a href="/app/users/kakao/login">카카오 계정으로 로그인 또는 회원가입</a><br>
+<a href="/sign-up">일반 회원가입</a>
+
+<script th:inline="javascript">
+
+    // 폼 제출 버튼 클릭 이벤트 핸들러
+    $('#submitBtn').click(function() {
+        // 입력된 데이터를 JSON 형식으로 변환
+        var formData = {
+            loginId: $('input[name="loginId"]').val(),
+            password: $('input[name="password"]').val()
+        };
+
+        // 서버에 AJAX 요청 보내기
+        $.ajax({
+            type: 'POST',
+            url: `app/users/auth/login` ,
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                console.log('로그인 성공:', response);
+                var accessToken = response.result.accessToken;
+                // payment 페이지로 리디렉션
+                window.location.href = 'payment?accessToken=' + accessToken;
+            },
+            error: function(xhr, status, error) {
+                console.error('요청 실패:', error);
+            }
+        });
+    });
+</script>
 </body>
 </html>

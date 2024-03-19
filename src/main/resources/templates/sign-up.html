@@ -6,12 +6,12 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<h2>회원가입</h2>
+<h2 th:text="${loginType != 'auth' ? loginType + ' 회원가입' : '회원가입'}"></h2>
 <form id="signupForm">
-    <p>아이디 : <input type="text" name="loginId" value="test1"></p>
+    <p>아이디 : <input type="text" name="loginId" value="test1"1></p>
     <p>비밀번호 : <input type="text" name="password" value="password!11"></p>
-    <p>이름 : <input type="text" name="name" value="testname"></p>
-    <p>연락처 : <input type="text" name="phoneNumber" value="010-0000-0000"></p>
+    <p>이름 : <input type="text" name="name" value="testname1"></p>
+    <p>연락처 : <input type="text" name="phoneNumber" value="010-0000-0220"></p>
     <p>생일 : <input type="text" name="birthday" value="1999-12-12"></p>
     <p>사용약관 : <input type="text" name="dataTermsConsent" value="ture"></p>
     <p>데이터 정책 : <input type="text" name="usageTermsConsent" value="true"></p>
@@ -23,8 +23,6 @@
 
 <script>
     // 현재 URL의 쿼리 문자열에서 "code" 파라미터 추출
-    var urlParams = new URLSearchParams(window.location.search);
-    var codeParam = urlParams.get('code');
 
     // 폼 제출 버튼 클릭 이벤트 핸들러
     $('#submitBtn').click(function() {
@@ -43,14 +41,22 @@
         // 서버에 AJAX 요청 보내기
         $.ajax({
             type: 'POST',
-            url: '/auth/kakao/sign-up?code=' + codeParam ,
+            url: 'app/users/[[${loginType}]]/sign-up[[${queryString}]]' ,
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function(response) {
-                console.log('요청 성공:', response);
+                if (response.isSuccess === true) {
+                    console.log('요청 성공:', response);
+                    alert("회원가입에 성공했습니다. 로그인 해주세요.");
+                    window.location.href = '[[${requestBaseUrl}]]/login';
+                } else {
+                    console.error('회원가입에 실패했습니다. 다시 시도해주세요.');
+                    alert(`회원가입에 실패했습니다. 다시 시도해주세요.\n${response.message}`);
+                }
+
             },
             error: function(xhr, status, error) {
-                console.error('요청 실패:', error);
+                console.error('회원가입에 실패했습니다. 다시 시도해주세요', error);
             }
         });
     });

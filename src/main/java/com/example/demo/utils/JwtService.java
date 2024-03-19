@@ -28,12 +28,13 @@ public class JwtService {
     @param userId
     @return String
      */
-    public String createJwt(Long userId, User.UserAuthority authority){
+    public String createJwt(Long userId, String username, User.UserAuthority authority){
         Date now = new Date();
         return Jwts.builder()
                 .setHeaderParam("type","jwt")
                 .claim("userId", userId)
                 .claim("authority", authority.name())
+                .claim("username", username)
                 .setIssuedAt(now)
                 .setExpiration(new Date(System.currentTimeMillis()+1*(1000*60*60*24*365)))
                 .signWith(SignatureAlgorithm.HS256, JWT_SECRET_KEY)
@@ -84,12 +85,26 @@ public class JwtService {
     @throws BaseException
      */
     public Long getUserId() {
-        //1. JWT 추출
+
         String accessToken = getJwt();
-        // 2. JWT parsing
         Jws<Claims> claims = parseClaims(accessToken);
-        // 3. userId 추출
         return claims.getBody().get("userId", Long.class);
+    }
+
+    public Long getUserId(String accessToken) {
+        Jws<Claims> claims = parseClaims(accessToken);
+        return claims.getBody().get("userId", Long.class);
+    }
+
+    public String getUsername() {
+        String accessToken = getJwt();
+        Jws<Claims> claims = parseClaims(accessToken);
+        return claims.getBody().get("username", String.class);
+    }
+
+    public String getUsername(String accessToken) {
+        Jws<Claims> claims = parseClaims(accessToken);
+        return claims.getBody().get("username", String.class);
     }
 
 }
