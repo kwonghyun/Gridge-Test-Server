@@ -3,6 +3,7 @@ package com.example.demo.src.subscription.entity;
 import com.example.demo.common.entity.BaseEntity;
 import com.example.demo.src.user.entity.User;
 import lombok.*;
+import org.hibernate.mapping.ToOne;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -23,10 +24,10 @@ public class SubscriptionHistory extends BaseEntity {
     private LocalDate subscriptionStartDate;
     @Column(updatable = false)
     private LocalDate subscriptionEndDate;
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     private LocalDate previousPaymentDate;
     // 정기 결제일
-    private Integer paymentDay;
+    private Integer monthlyPaymentDay;
     @Column(nullable = false, updatable = false)
     private SubscriptionState subscriptionState;
 
@@ -34,12 +35,19 @@ public class SubscriptionHistory extends BaseEntity {
     @JoinColumn(nullable = false, updatable = false)
     private PaymentHistory paymentHistory;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, updatable = false)
     private User user;
 
+    @Builder.Default
+    private boolean isLatest = true;
+
     public enum SubscriptionState {
         SUBSCRIBED, CANCELLED;
+    }
+
+    public void updateIsLatest() {
+        this.isLatest = false;
     }
 
 }

@@ -44,13 +44,17 @@ public enum BaseResponseStatus {
     NOT_FIND_FEED(false,HttpStatus.NOT_FOUND.value(),"일치하는 피드가 없습니다."),
     NOT_FIND_PAYMENT(false,HttpStatus.NOT_FOUND.value(),"일치하는 결제기록이 없습니다."),
     FAKE_PAYMENT_INFO(false,HttpStatus.BAD_REQUEST.value(),"위조된 결제가 발생했습니다."),
+    ISSUE_BILLING_KEY_FAILED(false,HttpStatus.BAD_REQUEST.value(),"빌링키 발급에 실패했습니다."),
+    NOT_FIND_BILLING_KEY(false,HttpStatus.BAD_REQUEST.value(),"빌링키가 없습니다. 발급해주세요."),
     NOT_AUTHORIZED_FEED(false,HttpStatus.UNAUTHORIZED.value(), "접근 권한이 없는 피드입니다."),
 
     NOT_FIND_COMMENT(false,HttpStatus.NOT_FOUND.value(),"일치하는 댓글이 없습니다."),
-    NOT_FIND_SUBSCRIPTION(false,HttpStatus.NOT_FOUND.value(),"구독 이력이 없습니다."),
+    NOT_FIND_SUBSCRIPTION(false,HttpStatus.NOT_FOUND.value(),"구독정보가 없습니다."),
+    NOT_FIND_ALIVE_SUBSCRIPTION(false,HttpStatus.NOT_FOUND.value(),"구독중이 아닙니다."),
     NOT_FIND_FEED_LIKE(false,HttpStatus.NOT_FOUND.value(),"일치하는 좋아요가 없습니다."),
 
     NOT_AUTHORIZED_COMMENT(false,HttpStatus.UNAUTHORIZED.value(), "접근 권한이 없는 댓글입니다."),
+    NOT_AUTHORIZED(false,HttpStatus.UNAUTHORIZED.value(), "로그인해야 이용할 수 있는 서비스 입니다."),
 
     NOT_MATCH_FEED_MEDIA_CONTENT(false,HttpStatus.BAD_REQUEST.value(), "요청한 피드의 사진 또는 동영상이 아닙니다."),
     UNSUPPORTED_MEDIA_TYPE(false,HttpStatus.BAD_REQUEST.value(), "지원하는 형식의 사진(\"jpg\", \"jpeg\", \"png\", \"gif\") 또는 동영상(\"mp4\", \"avi\", \"mov\", \"mkv\")이 아닙니다."),
@@ -69,9 +73,13 @@ public enum BaseResponseStatus {
     SERVER_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버와의 연결에 실패하였습니다."),
     PASSWORD_ENCRYPTION_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "비밀번호 복호화에 실패하였습니다."),
+    JSON_PROCESSING_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "JSON을 파싱하는데 실패하였습니다."),
 
     UPLOAD_FAIL_MEDIA_CONTENT(false,HttpStatus.INTERNAL_SERVER_ERROR.value(), "파일 업로드에 실패했습니다."),
     GET_PORT_ONE_TOKEN_FAIL(false,HttpStatus.INTERNAL_SERVER_ERROR.value(), "포트원 토큰 불러오기에 실패했습니다."),
+
+    FAILED_PAYMENT(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),"결제에 실패했습니다."),
+    FAILED_PAYMENT_CANCELLATION(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),"결제 취소에 실패했습니다."),
 
     MODIFY_FAIL_USERNAME(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),"유저네임 수정 실패"),
     DELETE_FAIL_USERNAME(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),"유저 삭제 실패"),

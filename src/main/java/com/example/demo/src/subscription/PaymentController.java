@@ -4,6 +4,8 @@ import com.example.demo.common.response.BaseResponse;
 import com.example.demo.src.subscription.model.PortOneWebhookReq;
 import com.example.demo.src.subscription.model.PostPaymentRes;
 import com.example.demo.src.subscription.model.PostPaymentResultReq;
+import com.example.demo.src.subscription.service.PaymentService;
+import com.example.demo.src.subscription.service.PortOneService;
 import com.example.demo.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,17 +23,17 @@ public class PaymentController {
     @PostMapping
     public BaseResponse<PostPaymentRes> createPayment() {
         Long userId = jwtService.getUserId();
-        PostPaymentRes payment = paymentService.createPayment(userId);
+        PostPaymentRes payment = paymentService.createPaymentForBillingKey(userId);
         return new BaseResponse<>(payment);
     }
 
-    @PostMapping("result")
+    @PostMapping("first-pay")
     public BaseResponse checkResult(
             @RequestBody PostPaymentResultReq req
     ) {
         Long userId = jwtService.getUserId();
         log.info("POST result 호출 : {}", req);
-        paymentService.saveResult(req);
+        paymentService.firstPay(req, userId);
         return new BaseResponse("결과 저장 완료");
     }
 

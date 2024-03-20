@@ -21,37 +21,29 @@ public class PaymentHistory extends BaseEntity {
     @Column(nullable = false, updatable = false)
     private Integer price;
 
-    @Column(nullable = false, updatable = false)
-    @Enumerated(EnumType.STRING)
-    private PaymentState paymentState;
-
     @Column(nullable = false, updatable = false, unique = true)
     private String merchantUid;
-
-    @Column(nullable = false, updatable = false, unique = true)
-    private String customerUid;
 
     @Column(nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @ManyToOne
+    @Column(updatable = false)
+    private String impUidToCancel;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, updatable = false)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(updatable = false)
+    private BillingKey billingKey;
 
     @OneToOne(mappedBy = "paymentHistory")
     private PaymentResult paymentResult;
 
-    // 빌링키 발급(Type.BILLING_KEY) : PaymentState.(STAGED -> ISSUED_BILLING_KEY)
-    // 정기 결제(Type.SCHEDULED_PAYMENT) : PaymentState.(STAGED -> SCHEDULED -> PAID) SCHEDULED, PAID 반복
-    // 취소(Type.CANCELLATION) : PaymentState.(STAGED -> SCHEDULED_PAYMENT_CANCELLED -> REFUND -> BILLING_KEY_DELETED)
-
-    public enum PaymentState {
-        STAGED, ISSUED_BILLING_KEY, SCHEDULED, PAID, FAILED, SCHEDULED_PAYMENT_CANCELLED, REFUND, BILLING_KEY_DELETED;
-    }
-
     public enum Type {
-        SCHEDULED_PAYMENT, BILLING_KEY, CANCELLATION;
+        FIRST_PAYMENT, SCHEDULED_PAYMENT, BILLING_KEY, CANCELLATION;
     }
 
 }

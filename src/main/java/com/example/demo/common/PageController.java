@@ -2,8 +2,7 @@ package com.example.demo.common;
 
 import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.common.response.BaseResponseStatus;
-import com.example.demo.src.subscription.PaymentService;
-import com.example.demo.src.subscription.SubscriptionService;
+import com.example.demo.src.subscription.service.SubscriptionService;
 import com.example.demo.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +20,13 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PageController {
     private final JwtService jwtService;
-    private final PaymentService paymentService;
     private final SubscriptionService subscriptionService;
 
     @GetMapping("login")
     public String login(HttpServletRequest request, Model model) {
-
         return "login";
     }
+
 
     @GetMapping("sign-up")
     public String signUp(
@@ -58,14 +56,21 @@ public class PageController {
     }
     @GetMapping("payment")
     public String paymentPage(
-            @RequestParam("accessToken") String accessToken,
+            @RequestParam(value = "accessToken", required = false) String accessToken,
             HttpServletRequest request,
-            Model model) {
+            HttpServletResponse response,
+            Model model) throws IOException {
+        if (accessToken == null) {
+            response.sendRedirect("/login");
+        }
         Long userId = jwtService.getUserId(accessToken);
+
         if (subscriptionService.checkSubscription(userId)) {
             model.addAttribute("isSubscribed", true);
         } else {
             model.addAttribute("isSubscribed", false);
+            model.addAttribute("storeId", "imp06817208");
+            model.addAttribute("accessToken", accessToken);
         }
         String username = jwtService.getUsername(accessToken);
         model.addAttribute("name", username);

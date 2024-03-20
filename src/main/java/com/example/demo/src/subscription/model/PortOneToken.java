@@ -1,4 +1,4 @@
-package com.example.demo.src.subscription;
+package com.example.demo.src.subscription.model;
 
 import lombok.Getter;
 import lombok.Setter;

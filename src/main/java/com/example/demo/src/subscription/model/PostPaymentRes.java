@@ -1,9 +1,10 @@
 package com.example.demo.src.subscription.model;
 
-import com.example.demo.src.subscription.entity.PaymentHistory;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class PostPaymentRes {
     private final String pg = "html5_inicis.INIBillTst";
     private final String payMethod = "card";
@@ -12,10 +13,4 @@ public class PostPaymentRes {
     private Integer amount;
     private String customerUid;
     private String merchantId;
-
-    public PostPaymentRes(PaymentHistory paymentHistory) {
-        this.amount = paymentHistory.getPrice();
-        this.customerUid = paymentHistory.getCustomerUid();
-        this.merchantId = paymentHistory.getMerchantUid();
-    }
 }

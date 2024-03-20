@@ -1,11 +1,9 @@
-package com.example.demo.src.subscription;
+package com.example.demo.src.subscription.service;
 
 import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.common.response.BaseResponseStatus;
-import com.example.demo.src.subscription.entity.PaymentHistory;
-import com.example.demo.src.subscription.model.GetCustomerUidRes;
-import com.example.demo.src.subscription.model.PostPaymentRes;
-import com.example.demo.src.subscription.model.PostPortOneTokenRes;
+import com.example.demo.src.subscription.model.PostCancellationRes;
+import com.example.demo.src.subscription.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -50,9 +48,8 @@ public class PortOneService {
         try {
             requestBody = objectMapper.writeValueAsString(params);
         } catch (JsonProcessingException e) {
-            throw new BaseException(BaseResponseStatus.SERVER_ERROR);
+            throw new BaseException(BaseResponseStatus.JSON_PROCESSING_ERROR);
         }
-        log.info(requestBody);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -62,14 +59,14 @@ public class PortOneService {
                 portOneApiHostname + "/users/getToken",
                 request, String.class
         );
-        log.info(response.getBody());
+
         PostPortOneTokenRes postPortOneTokenRes;
         try {
             postPortOneTokenRes = objectMapper.readValue(response.getBody(), PostPortOneTokenRes.class);
 
         } catch (JsonProcessingException e) {
             log.info("포트원 토큰 파싱 에러");
-            throw new BaseException(BaseResponseStatus.GET_PORT_ONE_TOKEN_FAIL);
+            throw new BaseException(BaseResponseStatus.JSON_PROCESSING_ERROR);
         }
         if (postPortOneTokenRes.getCode() == 0) {
             portOneToken.setAccessToken("Bearer " + postPortOneTokenRes.getAccessToken());
@@ -79,7 +76,6 @@ public class PortOneService {
         } else {
             throw new BaseException(BaseResponseStatus.GET_PORT_ONE_TOKEN_FAIL);
         }
-
     }
 
     public boolean isCustomerUidValid(String customerUid) {
@@ -101,14 +97,13 @@ public class PortOneService {
         try {
             getCustomerUidRes = objectMapper.readValue(response.getBody(), GetCustomerUidRes.class);
         } catch (JsonProcessingException e) {
-            throw new BaseException(BaseResponseStatus.SERVER_ERROR);
+            throw new BaseException(BaseResponseStatus.JSON_PROCESSING_ERROR);
         }
         if (getCustomerUidRes.getCode() == 0) {
             return true;
         } else {
             return false;
         }
-
     }
 
     public boolean isPortOneTokenValid() {
@@ -123,8 +118,52 @@ public class PortOneService {
             return requestPortOneToken().getAccessToken();
         }
     }
-    public PostPaymentRes getPostBillingKeyReq(PaymentHistory paymentHistory) {
-        return new PostPaymentRes(paymentHistory);
+
+    public PostBillingKeyPaymentRes executePayment(PostBillingKeyPaymentReq req) {
+        log.info(req.toString());
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", getPortOneAccessToken());
+        HttpEntity<PostBillingKeyPaymentReq> request = new HttpEntity<>(req, headers);
+
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                portOneApiHostname + "/subscribe/payments/again",
+                request, String.class
+        );
+        log.info(response.getBody());
+        ObjectMapper objectMapper = new ObjectMapper();
+        PostBillingKeyPaymentRes postBillingKeyPaymentRes;
+        try {
+            postBillingKeyPaymentRes = objectMapper.readValue(response.getBody(), PostBillingKeyPaymentRes.class);
+        } catch (JsonProcessingException e) {
+            throw new BaseException(BaseResponseStatus.JSON_PROCESSING_ERROR);
+        }
+        return postBillingKeyPaymentRes;
     }
 
+    public PostCancellationRes cancelPayment(PostCancellationReq req) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", getPortOneAccessToken());
+        HttpEntity<PostCancellationReq> request = new HttpEntity<>(req, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                portOneApiHostname + "/payments/cancel",
+                request, String.class
+        );
+        PostCancellationRes postCancellationRes;
+
+        log.info(response.getBody());
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            postCancellationRes = objectMapper.readValue(response.getBody(), PostCancellationRes.class);
+        } catch (JsonProcessingException e) {
+            throw new BaseException(BaseResponseStatus.JSON_PROCESSING_ERROR);
+        }
+        return postCancellationRes;
+
+    }
 }
