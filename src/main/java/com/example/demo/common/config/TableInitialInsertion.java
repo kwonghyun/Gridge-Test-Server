@@ -1,5 +1,6 @@
 package com.example.demo.common.config;
 
+import com.example.demo.src.subscription.repository.BillingKeyRepository;
 import com.example.demo.src.user.UserRepository;
 import com.example.demo.src.user.entity.User;
 import com.example.demo.utils.SHA256;
@@ -13,10 +14,11 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class TableInitialInsertion {
     private final UserRepository userRepository;
+    private final BillingKeyRepository billingKeyRepository;
 
     @PostConstruct
-    public void userInit() {
-        userRepository.save(
+    public void init() {
+        User user = userRepository.save(
                 User.builder()
                         .loginId("qwerqwer")
                         .password(SHA256.encrypt("qwerqwer1!"))

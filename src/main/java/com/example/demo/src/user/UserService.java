@@ -4,7 +4,9 @@ package com.example.demo.src.user;
 import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.src.oauth.entity.OAuth;
 import com.example.demo.src.user.entity.User;
-import com.example.demo.src.user.model.*;
+import com.example.demo.src.user.model.PostLoginReq;
+import com.example.demo.src.user.model.PostLoginRes;
+import com.example.demo.src.user.model.PostUserReq;
 import com.example.demo.utils.JwtService;
 import com.example.demo.utils.SHA256;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,6 @@ public class UserService {
         if(checkUser.isPresent() == true){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
-
         String encryptPwd;
         try {
             encryptPwd = SHA256.encrypt(postUserReq.getPassword());
@@ -53,7 +54,7 @@ public class UserService {
         User user = userRepository.findActiveUserById(userId)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
         user.delete();
-        Optional<OAuth> optionalOAuth = Optional.ofNullable(user.getOAuth());
+        Optional<OAuth> optionalOAuth = Optional.ofNullable(user.getOAuth().get(0));
         optionalOAuth.ifPresent(oAuth -> oAuth.delete());
     }
 

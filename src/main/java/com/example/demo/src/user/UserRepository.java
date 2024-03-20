@@ -17,6 +17,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findActiveUserById(@Param("userId") Long userId);
 
     @Query(
+            "SELECT u FROM  User u JOIN FETCH u.billingKey " +
+                    "WHERE (u.id = :userId) " +
+                    "AND (u.state = com.example.demo.common.entity.BaseEntity$State.ACTIVE) "
+    )
+    Optional<User> findActiveUserWithBillingKeyById(@Param("userId") Long userId);
+
+    @Query(
             "SELECT u FROM User u " +
                     "WHERE (u.loginId = :loginId) " +
                     "AND (u.state = com.example.demo.common.entity.BaseEntity$State.ACTIVE) "
