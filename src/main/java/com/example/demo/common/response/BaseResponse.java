@@ -5,6 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.stream.Collectors;
 
 import static com.example.demo.common.response.BaseResponseStatus.SUCCESS;
 
@@ -32,6 +37,16 @@ public class BaseResponse<T> {
         this.isSuccess = status.isSuccess();
         this.message = status.getMessage();
         this.code = status.getCode();
+    }
+
+    // validation에 실패한 경우
+    public BaseResponse(MethodArgumentNotValidException exception) {
+        String exceptionStr = exception.getBindingResult().getFieldErrors().stream()
+                .map(FieldError::getDefaultMessage)
+                .collect(Collectors.joining("\n"));
+        this.isSuccess = false;
+        this.message = exceptionStr;
+        this.code = HttpStatus.BAD_REQUEST.value();
     }
 
 }

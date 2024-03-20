@@ -3,13 +3,24 @@ package com.example.demo.common.exceptions;
 import com.example.demo.common.response.BaseResponse;
 import com.example.demo.common.response.BaseResponseStatus;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
 @Slf4j
 @RestControllerAdvice
 public class ExceptionAdvice {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected BaseResponse handleValidationException(
+            MethodArgumentNotValidException exception
+    ) {
+        return new BaseResponse(exception);
+    }
 
     @ExceptionHandler(BaseException.class)
     public BaseResponse<BaseResponseStatus> BaseExceptionHandle(BaseException exception) {
