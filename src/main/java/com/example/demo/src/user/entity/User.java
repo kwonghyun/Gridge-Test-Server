@@ -2,11 +2,14 @@ package com.example.demo.src.user.entity;
 
 import com.example.demo.common.entity.BaseEntity;
 import com.example.demo.src.oauth.entity.OAuth;
+import com.example.demo.src.subscription.entity.BillingKey;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -49,8 +52,13 @@ public class User extends BaseEntity {
     @Builder.Default
     private UserAuthority authority = UserAuthority.USER;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private OAuth oAuth;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<OAuth> oAuth = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<BillingKey> billingKey = new ArrayList<>();
 
     public void updateName(String name) {
         this.name = name;

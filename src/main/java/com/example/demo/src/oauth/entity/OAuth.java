@@ -35,7 +35,7 @@ public class OAuth extends BaseEntity {
     private Constant.SocialLoginType socialLoginType;
 
     @JoinColumn(nullable = false, updatable = false, unique = true)
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     public void setUser(User user) {
