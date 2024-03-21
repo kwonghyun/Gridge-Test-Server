@@ -99,6 +99,8 @@ public class UserService {
         }
 
     }
+
+    // 휴면계정 휴면 해제 로그인
     @Transactional
     public PostLoginRes consentTermsLogin(PostConsentTermsReq req) {
         User user = userRepository.findUserByLoginId(req.getLoginId())
@@ -137,8 +139,6 @@ public class UserService {
     }
 
     // 매일 오전 3시에 휴면 계정 업데이트
-
-
     @Scheduled(cron = "0 3 * * *")
     @Transactional
     public void updateDormantUser() {
