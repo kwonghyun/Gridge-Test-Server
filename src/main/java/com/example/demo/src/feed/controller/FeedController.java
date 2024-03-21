@@ -1,13 +1,14 @@
 package com.example.demo.src.feed.controller;
 
 import com.example.demo.common.Constant;
-import com.example.demo.common.model.CustomPageable;
+import com.example.demo.common.model.PageReq;
 import com.example.demo.common.response.BaseResponse;
 import com.example.demo.src.feed.model.*;
-import com.example.demo.src.report.model.*;
 import com.example.demo.src.feed.service.FeedService;
 import com.example.demo.utils.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +29,11 @@ public class FeedController {
     }
 
     @GetMapping
-    public BaseResponse<Slice<GetFeedRes>> getFeeds(@ModelAttribute @Valid CustomPageable pageable) {
+    public BaseResponse<Slice<GetFeedRes>> getFeeds(
+            @ModelAttribute @Valid PageReq pageReq
+    ) {
         Long userId = jwtService.getUserId();
+        Pageable pageable = PageRequest.of(pageReq.getPage(), pageReq.getSize());
         Slice<GetFeedRes> slicedFeeds = feedService.getFeeds(pageable, userId);
         return new BaseResponse<>(slicedFeeds);
     }

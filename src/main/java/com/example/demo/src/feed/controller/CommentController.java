@@ -1,7 +1,7 @@
 package com.example.demo.src.feed.controller;
 
 import com.example.demo.common.Constant;
-import com.example.demo.common.model.CustomPageable;
+import com.example.demo.common.model.PageReq;
 import com.example.demo.common.response.BaseResponse;
 import com.example.demo.src.feed.model.CommentIdRes;
 import com.example.demo.src.feed.model.GetCommentRes;
@@ -9,6 +9,8 @@ import com.example.demo.src.feed.model.PostCommentReq;
 import com.example.demo.src.feed.service.CommentService;
 import com.example.demo.utils.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +36,10 @@ public class CommentController {
     @GetMapping("{feedId}/comments")
     public BaseResponse<Slice<GetCommentRes>> getComments(
             @PathVariable("feedId") Long feedId,
-            @ModelAttribute @Valid CustomPageable pageable
-    ) {
+            @ModelAttribute @Valid PageReq pageReq
+            ) {
         jwtService.validateJwt();
+        Pageable pageable = PageRequest.of(pageReq.getPage(), pageReq.getSize());
         Slice<GetCommentRes> commentsSliced = commentService.getCommentsSliced(feedId, pageable);
         return new BaseResponse<>(commentsSliced);
     }
