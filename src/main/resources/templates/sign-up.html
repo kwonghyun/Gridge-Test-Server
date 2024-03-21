@@ -13,9 +13,9 @@
     <p>이름 : <input type="text" name="name" value="testname1"></p>
     <p>연락처 : <input type="text" name="phoneNumber" value="010-0000-0220"></p>
     <p>생일 : <input type="text" name="birthday" value="1999-12-12"></p>
-    <p>사용약관 : <input type="text" name="dataTermsConsent" value="ture"></p>
-    <p>데이터 정책 : <input type="text" name="usageTermsConsent" value="true"></p>
-    <p>위치기반정보 : <input type="text" name="locationTermsConsent" value="true"></p>
+    <p>사용약관 : <input type="radio"  name="dataTermsConsent" ></p>
+    <p>데이터 정책 : <input type="radio"  name="usageTermsConsent" ></p>
+    <p>위치기반정보 : <input type="radio"  name="locationTermsConsent"></p>
     <p>
         <input type="button" id="submitBtn" value="가입하기">
     </p>
@@ -31,9 +31,9 @@
             name: $('input[name="name"]').val(),
             phoneNumber: $('input[name="phoneNumber"]').val(),
             birthday: $('input[name="birthday"]').val(),
-            dataTermsConsent: $('input[name="dataTermsConsent"]').val(),
-            usageTermsConsent: $('input[name="usageTermsConsent"]').val(),
-            locationTermsConsent: $('input[name="locationTermsConsent"]').val(),
+            dataTermsConsent: $('input[name="dataTermsConsent"]').prop('checked'),
+            usageTermsConsent: $('input[name="usageTermsConsent"]').prop('checked'),
+            locationTermsConsent: $('input[name="locationTermsConsent"]').prop('checked'),
         };
 
         // 서버에 AJAX 요청 보내기

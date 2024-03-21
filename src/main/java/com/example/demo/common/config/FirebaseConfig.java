@@ -10,8 +10,9 @@ import com.google.firebase.cloud.StorageClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Objects;
 
 @Configuration
 public class FirebaseConfig {
@@ -20,8 +21,13 @@ public class FirebaseConfig {
         if (!FirebaseApp.getApps().isEmpty()) {
             FirebaseApp.getInstance().delete();
         }
-        FileInputStream serviceAccount = new FileInputStream("src/main/resources/serviceAccountkey.json");
-        FirebaseOptions options = new FirebaseOptions.Builder()
+        InputStream serviceAccount = getClass().getResourceAsStream("/serviceAccountKey.json");
+
+        if (Objects.isNull(serviceAccount)) {
+            throw new NullPointerException("service account is null");
+        }
+
+        FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setStorageBucket("kkkk-3047a.appspot.com")
                 .build();
