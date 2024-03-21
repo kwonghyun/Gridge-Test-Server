@@ -65,7 +65,7 @@ public class PageController {
         }
         Long userId = jwtService.getUserId(accessToken);
 
-        if (subscriptionService.checkSubscription(userId)) {
+        if (subscriptionService.checkSubscriptionByUserId(userId)) {
             model.addAttribute("isSubscribed", true);
         } else {
             model.addAttribute("isSubscribed", false);

@@ -1,10 +1,11 @@
 package com.example.demo.src.feed.model;
 
 import com.example.demo.src.feed.entity.Feed;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Getter
 public class GetFeedRes {
     private String name;
     private int likesCount;

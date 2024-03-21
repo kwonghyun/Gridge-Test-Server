@@ -1,4 +1,4 @@
-package com.example.demo.src.feed.entity;
+package com.example.demo.src.report.entity;
 
 import com.example.demo.common.entity.BaseEntity;
 import com.example.demo.src.user.entity.User;
@@ -33,7 +33,7 @@ public abstract class Report extends BaseEntity {
     }
 
     public enum Reason {
-        SPAM, HATRED, VIOLENCE, BULLYING, HARASSMENT;
+        SPAM, HATRED, VIOLENCE, BULLYING, HARASSMENT, HATE;
     }
 
 }

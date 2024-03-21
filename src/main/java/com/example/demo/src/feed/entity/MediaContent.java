@@ -17,7 +17,7 @@ public class MediaContent extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, updatable = false, unique = true, length = 1000)
+    @Column(nullable = false, updatable = false, unique = true, length = 200)
     private String dir;
 
     @Column(nullable = false, updatable = false)

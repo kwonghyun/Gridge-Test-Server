@@ -29,11 +29,26 @@ public class Terms extends BaseEntity {
     @Column(nullable = false)
     private TermsConsentState consentState;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, updatable = false)
     private User user;
 
     public enum TermsConsentState {
         VALID, EXPIRED;
+    }
+
+    public void updateConsent(
+            Boolean dataTermsConsent,
+            Boolean usageTermsConsent,
+            Boolean locationTermsConsent
+    ) {
+        if (dataTermsConsent && usageTermsConsent && locationTermsConsent) {
+            this.consentState = TermsConsentState.VALID;
+            this.consentDate = LocalDate.now();
+        }
+    }
+
+    public void expire() {
+        this.consentState = TermsConsentState.EXPIRED;
     }
 }

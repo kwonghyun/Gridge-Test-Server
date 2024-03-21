@@ -21,6 +21,7 @@ public class PaymentController {
     private final PortOneService portOneService;
 
     @PostMapping
+    @ResponseBody
     public BaseResponse<PostPaymentRes> createPayment() {
         Long userId = jwtService.getUserId();
         PostPaymentRes payment = paymentService.createPaymentForBillingKey(userId);

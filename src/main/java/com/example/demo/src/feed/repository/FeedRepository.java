@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -16,14 +17,14 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
                     "AND (f.state = com.example.demo.common.entity.BaseEntity$State.ACTIVE) " +
                     "AND (f.visible = true) "
     )
-    Optional<Feed> findValidFeedWithUserById(Long feedId);
+    Optional<Feed> findValidFeedWithUserById(@Param("feedId") Long feedId);
 
     @Query(
             "SELECT f FROM Feed f " +
                     "WHERE (f.id = :feedId) " +
                     "AND (f.state = com.example.demo.common.entity.BaseEntity$State.ACTIVE) "
     )
-    Optional<Feed> findActiveFeedById(Long feedId);
+    Optional<Feed> findActiveFeedById(@Param("feedId") Long feedId);
 
     @Query(
             "SELECT f FROM Feed f JOIN FETCH f.user " +

@@ -1,8 +1,8 @@
-package com.example.demo.src.feed.repository;
+package com.example.demo.src.report;
 
-import com.example.demo.src.feed.entity.CommentReport;
-import com.example.demo.src.feed.entity.FeedReport;
-import com.example.demo.src.feed.entity.Report;
+import com.example.demo.src.report.entity.CommentReport;
+import com.example.demo.src.report.entity.FeedReport;
+import com.example.demo.src.report.entity.Report;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

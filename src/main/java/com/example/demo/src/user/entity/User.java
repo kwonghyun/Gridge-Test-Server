@@ -60,12 +60,16 @@ public class User extends BaseEntity {
     @Builder.Default
     private List<BillingKey> billingKey = new ArrayList<>();
 
+
     public void updateName(String name) {
         this.name = name;
     }
 
     public void updateLastLoginAt() {
         this.lastLoginAt = LocalDateTime.now();
+    }
+    public void updateUserState(UserState userState) {
+        this.userState = userState;
     }
 
     public enum UserAuthority {

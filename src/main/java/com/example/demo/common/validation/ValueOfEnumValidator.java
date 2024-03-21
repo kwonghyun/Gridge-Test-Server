@@ -23,8 +23,8 @@ public class ValueOfEnumValidator implements ConstraintValidator<EnumValueCheck,
             return true;
         }
         try {
-            Method fromMethod = this.enumValueCheck.enumClass().getMethod("valueOf", Class.class, String.class);
-            fromMethod.invoke(null, value.toUpperCase());
+            Method fromMethod = this.enumValueCheck.enumClass().getMethod("valueOf", String.class);
+            fromMethod.invoke(this.enumValueCheck.enumClass(), value.toUpperCase());
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             log.error("Error validating enum value: {}", e.getMessage());
             return false;

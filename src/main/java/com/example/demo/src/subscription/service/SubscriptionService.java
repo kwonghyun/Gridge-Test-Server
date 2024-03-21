@@ -5,6 +5,7 @@ import com.example.demo.common.response.BaseResponseStatus;
 import com.example.demo.src.subscription.entity.PaymentHistory;
 import com.example.demo.src.subscription.entity.PaymentResult;
 import com.example.demo.src.subscription.entity.SubscriptionHistory;
+import com.example.demo.src.subscription.model.GetCheckSubscriptionRes;
 import com.example.demo.src.subscription.repository.SubscriptionRepository;
 import com.example.demo.src.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,9 @@ public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final PaymentService paymentService;
 
+
     // 구독 여부 확인
-    public Boolean checkSubscription(Long userId) {
+    public Boolean checkSubscriptionByUserId(Long userId) {
         Optional<SubscriptionHistory> optional = subscriptionRepository.findLatestByUserId(userId);
         if (
                 optional.isPresent()
@@ -40,6 +42,11 @@ public class SubscriptionService {
         } else {
             return false;
         }
+    }
+
+    public GetCheckSubscriptionRes checkSubscriptionRes(Long userId) {
+        Boolean subscribed = checkSubscriptionByUserId(userId);
+        return new GetCheckSubscriptionRes(subscribed);
     }
 
     // 유저의 최신 구독 기록 반환

@@ -24,7 +24,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                         ") " +
                     "ORDER BY c.createdAt DESC "
     )
-    List<Comment> findWithUserByFeedIdIfCountUnder(@Param("feedId") Long feedId, @Param("count") int count);
+    List<Comment> findWithUserByFeedIdIfCountUnder(@Param("feedId") Long feedId, @Param("count") Long count);
 
     @Query(
             "SELECT c FROM Comment c " +

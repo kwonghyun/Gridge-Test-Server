@@ -5,6 +5,7 @@ import com.example.demo.common.response.BaseResponseStatus;
 import com.example.demo.src.feed.entity.Feed;
 import com.example.demo.src.feed.entity.FeedLike;
 import com.example.demo.src.feed.model.*;
+import com.example.demo.src.report.model.*;
 import com.example.demo.src.feed.repository.FeedLikeRepository;
 import com.example.demo.src.feed.repository.FeedRepository;
 import com.example.demo.src.user.UserRepository;
@@ -28,7 +29,7 @@ public class FeedService {
     private final MediaContentService mediaContentService;
 
     @Transactional
-    public PostFeedRes createFeed(PostFeedReq req, Long userId) {
+    public FeedIdRes createFeed(PostFeedReq req, Long userId) {
         User user = userRepository.getReferenceById(userId);
         Feed feed = feedRepository.save(
                 Feed.builder()
@@ -37,11 +38,11 @@ public class FeedService {
                         .build()
         );
         mediaContentService.createMediaConnections(feed, req.getMedia());
-        return new PostFeedRes(feed);
+        return new FeedIdRes(feed.getId());
     }
 
     @Transactional
-    public void modifyFeed(PatchFeedReq req, Long feedId, Long userId) {
+    public FeedIdRes modifyFeed(PatchFeedReq req, Long feedId, Long userId) {
         Feed feed = feedRepository.findActiveFeedById(feedId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FIND_FEED));
 
@@ -50,6 +51,7 @@ public class FeedService {
         }
 
         feed.updateContent(req.getContent());
+        return new FeedIdRes(feed.getId());
     }
 
     public Slice<GetFeedRes> getFeeds(Pageable pageable, Long userId) {
@@ -91,6 +93,7 @@ public class FeedService {
         likes.stream().forEach(like -> like.delete());
     }
 
+    @Transactional
     public PostFeedLikeRes likeFeed(Long feedId, Long userId) {
         Feed feed = feedRepository.getReferenceById(feedId);
         User user = userRepository.getReferenceById(userId);

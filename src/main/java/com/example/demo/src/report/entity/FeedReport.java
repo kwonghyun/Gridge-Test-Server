@@ -1,7 +1,9 @@
-package com.example.demo.src.feed.entity;
+package com.example.demo.src.report.entity;
 
+import com.example.demo.src.feed.entity.Feed;
 import com.example.demo.src.user.entity.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
@@ -17,7 +19,8 @@ public class FeedReport extends Report{
     @ManyToOne(fetch = FetchType.LAZY)
     private Feed feed;
 
-    public FeedReport(Reason reason, User user, Feed feed) {
+    @Builder
+    protected FeedReport(Reason reason, User user, Feed feed) {
         super(reason, user);
         this.feed = feed;
     }

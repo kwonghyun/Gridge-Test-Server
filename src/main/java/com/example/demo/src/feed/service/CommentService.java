@@ -4,6 +4,7 @@ import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.common.response.BaseResponseStatus;
 import com.example.demo.src.feed.entity.Comment;
 import com.example.demo.src.feed.entity.Feed;
+import com.example.demo.src.feed.model.CommentIdRes;
 import com.example.demo.src.feed.model.GetCommentRes;
 import com.example.demo.src.feed.model.PatchCommentReq;
 import com.example.demo.src.feed.model.PostCommentReq;
@@ -31,22 +32,23 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void createComment(PostCommentReq req, Long feedId, Long userId) {
+    public CommentIdRes createComment(PostCommentReq req, Long feedId, Long userId) {
         User user = userRepository.getReferenceById(userId);
         Feed feed = feedRepository.findActiveFeedById(feedId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FIND_FEED));
 
-        commentRepository.save(
+        Comment comment = commentRepository.save(
                 Comment.builder()
                         .content(req.getContent())
                         .feed(feed)
                         .user(user)
                         .build()
         );
+        return new CommentIdRes(comment.getId());
     }
 
     public List<GetCommentRes> getCommentsAtFeedList(Long feedId) {
-        return commentRepository.findWithUserByFeedIdIfCountUnder(feedId, 3)
+        return commentRepository.findWithUserByFeedIdIfCountUnder(feedId, 3L)
                 .stream()
                 .map(GetCommentRes::new)
                 .collect(Collectors.toList());

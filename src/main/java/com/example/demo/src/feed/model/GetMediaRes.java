@@ -2,7 +2,9 @@ package com.example.demo.src.feed.model;
 
 import com.example.demo.src.feed.entity.MediaConnection;
 import com.example.demo.src.feed.entity.MediaContent;
+import lombok.Getter;
 
+@Getter
 public class GetMediaRes {
     private Long mediaContentId;
     private int order;

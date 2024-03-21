@@ -62,10 +62,10 @@ public class MediaContentService {
 
     @Transactional
     public void createMediaConnections(Feed feed, List<PostFeedMediaReq> reqs) {
-        if (reqs.size() > 10) {
-            throw new BaseException(BaseResponseStatus.TOO_MANY_MEDIA_CONTENT);
-        } else if (reqs == null || reqs.isEmpty()) {
+        if (reqs == null || reqs.isEmpty()) {
             return;
+        } else if (reqs.size() > 10) {
+            throw new BaseException(BaseResponseStatus.TOO_MANY_MEDIA_CONTENT);
         }
         List<MediaConnection> connections = reqs.stream()
                 .map(req -> {

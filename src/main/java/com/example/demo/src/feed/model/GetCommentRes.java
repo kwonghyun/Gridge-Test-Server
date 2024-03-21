@@ -1,9 +1,10 @@
 package com.example.demo.src.feed.model;
 
 import com.example.demo.src.feed.entity.Comment;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
-
+@Getter
 public class GetCommentRes {
     private String name;
     private Long commentId;

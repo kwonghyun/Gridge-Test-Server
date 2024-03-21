@@ -29,13 +29,13 @@ public interface FeedLikeRepository extends JpaRepository<FeedLike, Long> {
     Optional<FeedLike> findByFeedIdAndUserId(@Param("feedId") Long feedId, @Param("userId") Long userId);
 
     @Query(
-            "SELECT COUNT(l) FROM FeedLike l " +
+            "SELECT COUNT(l.id) FROM FeedLike l " +
                     "WHERE (l.feed.id = :feedId) " +
                     "AND (l.liked = true) " +
                     "AND (l.state = com.example.demo.common.entity.BaseEntity$State.ACTIVE) "
 
     )
-    int countLikesByFeedId(Long feedId);
+    int countLikesByFeedId(@Param("feedId") Long feedId);
 
     @Query(
             "SELECT COUNT(l) FROM FeedLike l " +

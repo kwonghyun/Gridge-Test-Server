@@ -1,9 +1,12 @@
 package com.example.demo.common.model;
 
+import com.example.demo.common.Constant;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 public class CustomPageable extends PageRequest {
     /**
@@ -13,7 +16,14 @@ public class CustomPageable extends PageRequest {
      * @param size the size of the page to be returned, must be greater than 0.
      * @param sort must not be {@literal null}, use {@link Sort#unsorted()} instead.
      */
-    public CustomPageable(@NotBlank Integer page, @NotBlank Integer size, Sort sort) {
-        super(page, size, sort);
+    public CustomPageable(
+            @NotBlank(message = Constant.PAGE_VALID)
+            @PositiveOrZero(message = Constant.PAGE_VALID)
+            Integer page,
+            @NotBlank(message = Constant.SIZE_VALID)
+            @Positive(message = Constant.SIZE_VALID)
+            Integer size
+    ) {
+        super(page, size, Sort.unsorted());
     }
 }

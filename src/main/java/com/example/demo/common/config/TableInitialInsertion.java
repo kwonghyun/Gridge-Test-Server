@@ -20,8 +20,8 @@ public class TableInitialInsertion {
     public void init() {
         User user = userRepository.save(
                 User.builder()
-                        .loginId("qwerqwer")
-                        .password(SHA256.encrypt("qwerqwer1!"))
+                        .loginId("test11")
+                        .password(SHA256.encrypt("test1."))
                         .name("테스트유저")
                         .phoneNumber("010-0000-0000")
                         .birthDay(LocalDate.parse("1999-12-12"))

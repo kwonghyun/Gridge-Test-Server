@@ -26,10 +26,10 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-    generate-ddl: false
+    # generate-ddl: false
+    open-in-view: false # @Transactional 선언된 서비스레이어 메서드 종료시 커넥션 반환
 
-server:
-  port: 3000
+
 
 springdoc:
   swagger-ui:
@@ -47,12 +47,12 @@ springdoc:
     - /**
 
 jwt:
-  secret-key: ${JWT_SECRET}  # JWT key. 수정해주세요
+  secret-key: ajhsgerjhgbytf_!*fdhka**s-akgskdfksjfwfb345  # ${JWT_SECRET}
 
 portOne:
-  restApiKey: ${PORT_ONE_REST_API_KEY}
-  secret: ${PORT_ONE_SECRET}
-  hostname: ${PORT_ONE_HOSTNAME}
+  restApiKey: 0520324646366165 #${PORT_ONE_REST_API_KEY}
+  secret: i8m41exe8tIvBKDzgc21Cyl9SYFcjUjPmKfBQ8fZnlMoefhjonm2wGgz5FOK0zQpFwPJt6mrsNV5CqfD #${PORT_ONE_SECRET}
+  hostname: https://api.iamport.kr #${PORT_ONE_HOSTNAME}
 ---
 spring:
   config:
@@ -60,24 +60,25 @@ spring:
       on-profile: "prod"
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: false
     properties:
       hibernate:
         format_sql: false
   datasource:
-    url: jdbc:mysql://localhost:3306/demo?autoReconnect=true&setTimezone=Asia/Seoul # 변경해주세요
-    username: ${LOCAL_DB_USERNAME}
-    password: ${LOCAL_DB_PASSWORD}
+    url: jdbc:mysql://worklog.cu8wjp5j3wid.ap-northeast-2.rds.amazonaws.com:3306/demo # 변경해주세요
+    username: admin #${LOCAL_DB_USERNAME}
+    password: RhkdRhkdEhdEhd #${LOCAL_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8버전
 OAuth2:
   kakao:
     login-uri: https://kauth.kakao.com/oauth/authorize
-    client-id: ${KAKAO_REST_API_KEY}
-    redirect-uri: http://localhost:3000/login/kakao
+    client-id: 44a90896f3ee78d0e03712d6cd025cfd #${KAKAO_REST_API_KEY}
+    redirect-uri: https://worklog.shop/login/kakao
     token-uri: https://kauth.kakao.com/oauth/token
     user-info-uri: https://kapi.kakao.com/v2/user/me
-
+server:
+  port: 8080
 ---
 spring:
   config:
@@ -92,8 +93,8 @@ spring:
         format_sql: true
   datasource:
     url: jdbc:mysql://localhost:3306/demo?autoReconnect=true&setTimezone=Asia/Seoul # 변경해주세요
-    username: ${LOCAL_DB_USERNAME}
-    password: ${LOCAL_DB_PASSWORD}
+    username: root # ${LOCAL_DB_USERNAME}
+    password: 12345678 # ${LOCAL_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8버전
   devtools:
     livereload:
@@ -101,7 +102,9 @@ spring:
 OAuth2:
   kakao:
     login-uri: https://kauth.kakao.com/oauth/authorize
-    client-id: ${KAKAO_REST_API_KEY}
+    client-id: 44a90896f3ee78d0e03712d6cd025cfd #${KAKAO_REST_API_KEY}
     redirect-uri: http://localhost:3000/login/kakao
     token-uri: https://kauth.kakao.com/oauth/token
     user-info-uri: https://kapi.kakao.com/v2/user/me
+server:
+  port: 3000

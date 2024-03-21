@@ -1,16 +1,15 @@
-package com.example.demo.src.feed.service;
+package com.example.demo.src.report;
 
 import com.example.demo.common.exceptions.BaseException;
 import com.example.demo.common.response.BaseResponseStatus;
-import com.example.demo.src.feed.entity.Comment;
-import com.example.demo.src.feed.entity.CommentReport;
-import com.example.demo.src.feed.entity.Feed;
-import com.example.demo.src.feed.entity.FeedReport;
-import com.example.demo.src.feed.model.PostReportCommentReq;
-import com.example.demo.src.feed.model.PostReportFeedReq;
+import com.example.demo.src.feed.entity.*;
 import com.example.demo.src.feed.repository.CommentRepository;
 import com.example.demo.src.feed.repository.FeedRepository;
-import com.example.demo.src.feed.repository.ReportRepository;
+import com.example.demo.src.report.entity.CommentReport;
+import com.example.demo.src.report.entity.FeedReport;
+import com.example.demo.src.report.entity.Report;
+import com.example.demo.src.report.model.PostReportCommentReq;
+import com.example.demo.src.report.model.PostReportFeedReq;
 import com.example.demo.src.user.UserRepository;
 import com.example.demo.src.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,11 @@ public class ReportService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FIND_FEED));
         User user = userRepository.getReferenceById(userId);
         reportRepository.save(
-                new FeedReport(req.getReason(), user, feed)
+                FeedReport.builder()
+                        .feed(feed)
+                        .user(user)
+                        .reason(Report.Reason.valueOf(req.getReason().toUpperCase()))
+                        .build()
         );
 
     }
@@ -55,7 +58,11 @@ public class ReportService {
 
         User user = userRepository.getReferenceById(userId);
         reportRepository.save(
-                new CommentReport(req.getReason(), user, comment)
+                CommentReport.builder()
+                        .comment(comment)
+                        .user(user)
+                        .reason(Report.Reason.valueOf(req.getReason().toUpperCase()))
+                        .build()
         );
 
     }
