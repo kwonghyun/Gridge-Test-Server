@@ -8,8 +8,14 @@
 ### 파일구조
 ![파일구조](https://github.com/kwonghyun/Gridge-Test-Server/assets/61932809/4beee658-bc2a-470f-a13a-a50583a0d5a5)
 
-카카오 redirect url에 https://worklog.shop/login/kakao 를 추가해주셔야 소셜로그인이 제대로 동작할 것 같습니다.
-postman 컬렉션의 로그인 api를 실행하면 accessToken이 입력됩니다.
-결제는 테스트 결제이고 100원으로 세팅해 놓았으니 안심하고 결제하세요.
-소셜로그인, 구독 첫결제는 https://worklog.shop/login 이 페이지부터 시작해서 테스트 하시면 되겠습니다.
-로그인바로 누르시면 구독 확인페이지로 이동합니다.
+카카오 redirect url에 https://worklog.shop/login/kakao 를 추가해주셔야 소셜로그인이 제대로 동작할 것 같습니다.  
+
+postman 컬렉션의 로그인 api를 실행하면 accessToken이 입력됩니다.  
+
+결제는 테스트 결제이고 100원으로 세팅해 놓았으니 안심하고 결제하세요.  
+
+소셜로그인, 구독 첫결제는 https://worklog.shop/login 이 페이지부터 시작해서 테스트 하시면 되겠습니다.  
+
+로그인 바로 누르시면 구독 확인페이지로 이동합니다.  
+
+스웨거 페이지가 영 시원찮은데 포스트맨 컬렉션에 결과까지 최대한 저장해 뒀습니다....ㅜㅜ
