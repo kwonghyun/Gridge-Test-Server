@@ -21,14 +21,14 @@ public class PaymentHistory extends BaseEntity {
     @Column(nullable = false, updatable = false)
     private Integer price;
 
-    @Column(nullable = false, updatable = false, unique = true)
+    @Column(nullable = false, updatable = false, unique = true, length = 50)
     private String merchantUid;
 
     @Column(nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @Column(updatable = false)
+    @Column(updatable = false, length = 50)
     private String impUidToCancel;
 
     @ManyToOne(fetch = FetchType.LAZY)

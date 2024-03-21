@@ -84,6 +84,7 @@ public class PostCancellationRes {
         private String receiptUrl;
         @JsonProperty("started_at")
         private long startedAt;
+        private String status;
         @JsonProperty("user_agent")
         private String userAgent;
         @JsonProperty("vbank_code")

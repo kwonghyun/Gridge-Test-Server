@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PaymentResultRepository extends JpaRepository<PaymentResult, Long> {
@@ -12,6 +13,6 @@ public interface PaymentResultRepository extends JpaRepository<PaymentResult, Lo
             "SELECT r FROM  PaymentResult r JOIN FETCH r.paymentHistory " +
                     "WHERE r.impUid = :impUid "
     )
-    Optional<PaymentResult> findByImpUid(@Param("impUid") String impUid);
+    List<PaymentResult> findByImpUid(@Param("impUid") String impUid);
 
 }

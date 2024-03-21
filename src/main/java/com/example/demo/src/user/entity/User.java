@@ -24,17 +24,17 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, unique = true, length = 20)
     private String loginId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String password;
 
     // 서비스 내에서 사용할 이름
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 14)
+    @Column(nullable = false, unique = true, length = 20)
     private String phoneNumber;
 
     @Column(nullable = false)

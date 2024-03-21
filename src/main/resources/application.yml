@@ -50,7 +50,7 @@ jwt:
   secret-key: ajhsgerjhgbytf_!*fdhka**s-akgskdfksjfwfb345  # ${JWT_SECRET}
 
 portOne:
-  restApiKey: 0520324646366165 #${PORT_ONE_REST_API_KEY}
+  restApiKey: '0520324646366165' #${PORT_ONE_REST_API_KEY}
   secret: i8m41exe8tIvBKDzgc21Cyl9SYFcjUjPmKfBQ8fZnlMoefhjonm2wGgz5FOK0zQpFwPJt6mrsNV5CqfD #${PORT_ONE_SECRET}
   hostname: https://api.iamport.kr #${PORT_ONE_HOSTNAME}
 ---

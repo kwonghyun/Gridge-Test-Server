@@ -18,10 +18,13 @@ public class BillingKey extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, updatable = false, unique = true)
+    @Column(nullable = false, updatable = false, unique = true, length = 50)
     private String customerUid;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, updatable = false, unique = true)
     private User user;
+
+    public void cutUserConnection() {
+        this.user = null;
+    }
 }

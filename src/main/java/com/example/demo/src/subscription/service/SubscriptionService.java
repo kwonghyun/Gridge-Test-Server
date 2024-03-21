@@ -53,7 +53,7 @@ public class SubscriptionService {
     public SubscriptionHistory getLatestAliveSubscription(Long userId) {
         SubscriptionHistory subscription = subscriptionRepository.findLatestByUserId(userId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FIND_SUBSCRIPTION));
-        if (subscription.getSubscriptionState() != SubscriptionHistory.SubscriptionState.CANCELLED) {
+        if (subscription.getSubscriptionState() == SubscriptionHistory.SubscriptionState.CANCELLED) {
             throw new BaseException(BaseResponseStatus.NOT_FIND_ALIVE_SUBSCRIPTION);
         }
         return subscription;

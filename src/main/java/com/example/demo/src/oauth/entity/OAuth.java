@@ -21,11 +21,11 @@ public class OAuth extends BaseEntity {
     private Long id;
 
     // 소셜 로그인 플랫폼 아이디
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String externalId;
 
     // 소셜 로그인 플랫폼 닉네임
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String externalName;
 
     private Integer externalBirthDay;

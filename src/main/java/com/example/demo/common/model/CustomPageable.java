@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -17,11 +18,7 @@ public class CustomPageable extends PageRequest {
      * @param sort must not be {@literal null}, use {@link Sort#unsorted()} instead.
      */
     public CustomPageable(
-            @NotBlank(message = Constant.PAGE_VALID)
-            @PositiveOrZero(message = Constant.PAGE_VALID)
             Integer page,
-            @NotBlank(message = Constant.SIZE_VALID)
-            @Positive(message = Constant.SIZE_VALID)
             Integer size
     ) {
         super(page, size, Sort.unsorted());

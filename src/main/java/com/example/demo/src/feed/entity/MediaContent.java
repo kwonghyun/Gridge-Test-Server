@@ -20,13 +20,13 @@ public class MediaContent extends BaseEntity {
     @Column(nullable = false, updatable = false, unique = true, length = 200)
     private String dir;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, length = 100)
     private String originalFileName;
 
     @Column(nullable = false, updatable = false)
     private Float size;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, length = 20)
     private String extension;
 
     @Column(nullable = false, updatable = false)

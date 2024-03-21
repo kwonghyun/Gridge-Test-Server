@@ -17,7 +17,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -122,8 +124,11 @@ public class PaymentService {
 
     @Transactional
     public PostCancellationReq createPaymentForCancellation(String impUid) {
-        PaymentResult paymentResult = paymentResultRepository.findByImpUid(impUid)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FIND_PAYMENT));
+        List<PaymentResult> paymentResults = paymentResultRepository.findByImpUid(impUid);
+        paymentResults.stream()
+                .filter(paymentResult -> paymentResult.getPayState() == PaymentResult.PayState.PAID)
+                .collect(Collectors.toList());
+        PaymentResult paymentResult = paymentResults.get(0);
         User user = paymentResult.getPaymentHistory().getUser();
         Long userId = user.getId();
 
@@ -204,10 +209,11 @@ public class PaymentService {
 
     @Transactional
     public void deleteBillingKey(String impUid) {
-        PaymentResult paymentResult = paymentResultRepository.findByImpUid(impUid)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FIND_PAYMENT));
+        List<PaymentResult> results = paymentResultRepository.findByImpUid(impUid);
+        PaymentResult paymentResult = results.get(0);
         BillingKey billingKey = paymentResult.getPaymentHistory().getBillingKey();
-        billingKeyRepository.delete(billingKey);
+        billingKey.cutUserConnection();
+        billingKey.delete();
     }
 
     @Transactional

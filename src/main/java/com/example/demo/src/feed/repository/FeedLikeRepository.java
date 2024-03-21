@@ -38,7 +38,7 @@ public interface FeedLikeRepository extends JpaRepository<FeedLike, Long> {
     int countLikesByFeedId(@Param("feedId") Long feedId);
 
     @Query(
-            "SELECT COUNT(l) FROM FeedLike l " +
+            "SELECT l FROM FeedLike l " +
                     "WHERE (l.feed.id = :feedId) " +
                     "AND (l.state = com.example.demo.common.entity.BaseEntity$State.ACTIVE) "
     )

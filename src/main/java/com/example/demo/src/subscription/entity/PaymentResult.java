@@ -19,10 +19,10 @@ public class PaymentResult extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(updatable = false, unique = true)
+    @Column(updatable = false)
     private String impUid;
 
-    @Column(updatable = false)
+    @Column(updatable = false, length = 50)
     private String cancellationId;
 
     @Column(updatable = false)

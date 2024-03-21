@@ -36,7 +36,7 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("auth/dormant-login")
-    public BaseResponse<PostLoginRes> login(@RequestBody @Valid PostConsentTermsReq req){
+    public BaseResponse<PostLoginRes> loginDormant(@RequestBody @Valid PostConsentTermsReq req){
         PostLoginRes postLoginRes = userService.consentTermsLogin(req);
         return new BaseResponse<>(postLoginRes);
     }

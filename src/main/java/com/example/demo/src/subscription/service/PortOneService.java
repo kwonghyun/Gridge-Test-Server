@@ -50,7 +50,7 @@ public class PortOneService {
         } catch (JsonProcessingException e) {
             throw new BaseException(BaseResponseStatus.JSON_PROCESSING_ERROR);
         }
-
+        log.info(requestBody);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
@@ -161,6 +161,7 @@ public class PortOneService {
         try {
             postCancellationRes = objectMapper.readValue(response.getBody(), PostCancellationRes.class);
         } catch (JsonProcessingException e) {
+            log.info(e.getMessage());
             throw new BaseException(BaseResponseStatus.JSON_PROCESSING_ERROR);
         }
         return postCancellationRes;
