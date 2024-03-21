@@ -42,5 +42,5 @@ public interface FeedLikeRepository extends JpaRepository<FeedLike, Long> {
                     "WHERE (l.feed.id = :feedId) " +
                     "AND (l.state = com.example.demo.common.entity.BaseEntity$State.ACTIVE) "
     )
-    List<FeedLike> findAllActiveLikesByFeedId(Long feedId);
+    List<FeedLike> findAllActiveLikesByFeedId(@Param("feedId") Long feedId);
 }
