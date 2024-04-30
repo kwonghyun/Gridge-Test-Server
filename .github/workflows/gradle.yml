@@ -1,0 +1,78 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+env:
+  AWS_REGION: ap-northeast-2
+  AWS_S3_BUCKET: ghcicdbucket
+  AWS_CODE_DEPLOY_APPLICATION: cicd
+  AWS_CODE_DEPLOY_GROUP: cicd-group
+permissions:
+  contents: read
+
+jobs:
+  build-with-gradle:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: production 브랜치로 이동
+      uses: actions/checkout@v3
+      with:
+        ref: main
+    - name: JDK 17 설치
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'corretto'
+    - name: yml jwt 환경변수 설정
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ./src/main/resources/application.yaml
+      env:
+        jwt.secret: ${{ secrets.JWT_SECRET }}
+        jwt.accessExpirationTime: ${{ secrets.JWT_EXPIRATION }}
+        jwt.refreshExpirationTime: ${{ secrets.JWT_REFRESH_EXPIRATION }}
+    - name: yml db 환경변수 설정
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ./src/main/resources/application-prod.yaml
+      env:
+        spring.datasource.url: ${{ secrets.DB_URL }}
+        spring.datasource.username: ${{ secrets.DB_USERNAME }}
+        spring.datasource.password: ${{ secrets.DB_PASSWORD }}
+    - name: yml redis 환경변수 설정
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ./src/main/resources/application.yaml
+      env:
+        spring.redis.host: ${{ secrets.REDIS_HOST }}
+        spring.redis.post: ${{ secrets.REDIS_PORT }}
+    - name: Set published time in application.yml
+      run: |
+        sed -i "s/publishedAt:.*/publishedAt: ${{ env.PUBLISHED_AT }}/g" ./src/main/resources/application.yaml
+      env:
+        PUBLISHED_AT: $(date -d '9 hours' '+%Y-%m-%d %H:%M:%S KST')
+    - name: gradlew에 실행 권한 부여
+      run: chmod +x ./gradlew
+    - name: 프로젝트 빌드
+      run: ./gradlew clean build -x test
+    - name: AWS credential 설정
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ${{ env.AWS_REGION }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: S3에 업로드
+      run: aws deploy push --application-name ${{ env.AWS_CODE_DEPLOY_APPLICATION }} --ignore-hidden-files --s3-location s3://${{ env.AWS_S3_BUCKET }}/${{ env.AWS_CODE_DEPLOY_APPLICATION }}/sns_${GITHUB_SHA}.zip --source .
+    - name: EC2에 배포
+      run: aws deploy create-deployment --application-name ${{ env.AWS_CODE_DEPLOY_APPLICATION }} --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name ${{ env.AWS_CODE_DEPLOY_GROUP }} --s3-location bucket=${{ env.AWS_S3_BUCKET }},key=${{ env.AWS_CODE_DEPLOY_APPLICATION }}/sns_${GITHUB_SHA}.zip,bundleType=zip
