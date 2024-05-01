@@ -1,6 +1,5 @@
 package com.example.demo.common.config;
 
-import com.example.demo.src.subscription.repository.BillingKeyRepository;
 import com.example.demo.src.user.TermsRepository;
 import com.example.demo.src.user.UserRepository;
 import com.example.demo.src.user.entity.Terms;
