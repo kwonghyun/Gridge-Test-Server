@@ -2,8 +2,8 @@
 
 #BUILD_JAR="/home/ubuntu/worklog_backend/build/libs/worklog-0.0.1-SNAPSHOT.jar"
 
-STOP_LOG="/home/ubuntu/sns/stop.log"
-SERVICE_PID=$(pgrep -f demo-0.0.1-SNAPSHOT.jar.jar) # 실행중인 Spring 서버의 PID
+STOP_LOG="/home/ubuntu/sns/scripts/stop.log"
+SERVICE_PID=$(pgrep -f demo-0.0.1-SNAPSHOT.jar) # 실행중인 Spring 서버의 PID
 
 if [ -z "$SERVICE_PID" ]; then
   echo "서비스 NouFound" >> $STOP_LOG

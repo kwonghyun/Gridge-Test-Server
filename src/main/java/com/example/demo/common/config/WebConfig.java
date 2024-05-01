@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         // 모든 경로에 앞으로 만들 모든 CORS 정보를 적용한다
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost:63342", "https://sns.worklog.shop", "http://sns.worklog.shop")
+                .allowedOrigins("http://localhost:8081", "http://localhost:63342", "https://sns.worklog.shop")
                 // 모든 HTTP Method를 허용한다.
                 .allowedMethods("*")
                 // HTTP 요청의 Header에 어떤 값이든 들어갈 수 있도록 허용한다.
