@@ -7,9 +7,11 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
-sourceCompatibility = 17
-targetCompatibility = 17
-compileJava.options.encoding = 'UTF-8'
+compileJava {
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
+
 
 configurations {
     compileOnly {
@@ -43,7 +45,6 @@ dependencies {
     // Web
     implementation ('org.springframework.boot:spring-boot-starter-web')
     implementation ('org.springframework.boot:spring-boot-starter')
-    implementation ('org.springframework.boot:spring-boot-starter-web')
     implementation ('org.springframework.boot:spring-boot-starter-thymeleaf')
 
     // Validation
