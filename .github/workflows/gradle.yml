@@ -41,7 +41,7 @@ jobs:
       with:
         files: ./src/main/resources/application.yaml
       env:
-        jwt.secret: ${{ secrets.JWT_SECRET }}
+        jwt.secret-key: ${{ secrets.JWT_SECRET }}
         port-one.rest-api-key: ${{ secrets.PORT_ONE_REST_API_KEY }}
         port-one.secret: ${{ secrets.PORT_ONE_SECRET }}
         port-one.hostname: ${{ secrets.PORT_ONE_HOSTNAME }}
