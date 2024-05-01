@@ -1,0 +1,22 @@
+# 배포 프로필 설정
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8버전
+
+OAuth2:
+  kakao:
+    login-uri: https://kauth.kakao.com/oauth/authorize
+    client-id: ${KAKAO_REST_API_KEY}
+    redirect-uri: https://sns.worklog.shop/login/kakao
+    token-uri: https://kauth.kakao.com/oauth/token
+    user-info-uri: https://kapi.kakao.com/v2/user/me
