@@ -7,21 +7,30 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.cloud.StorageClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Configuration
 public class FirebaseConfig {
+    private final String firebaseKey;
+    public FirebaseConfig(
+            @Value("${firebase.key}") String firebaseKey
+    ) {
+        this.firebaseKey = firebaseKey;
+    }
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
         if (!FirebaseApp.getApps().isEmpty()) {
             FirebaseApp.getInstance().delete();
         }
-        InputStream serviceAccount = getClass().getResourceAsStream("/serviceAccountKey.json");
+
+        ByteArrayInputStream serviceAccount = new ByteArrayInputStream(firebaseKey.getBytes(StandardCharsets.UTF_8));
 
         if (Objects.isNull(serviceAccount)) {
             throw new NullPointerException("service account is null");

@@ -24,12 +24,6 @@ public class OAuth extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String externalId;
 
-    // 소셜 로그인 플랫폼 닉네임
-    @Column(nullable = false, length = 100)
-    private String externalName;
-
-    private Integer externalBirthDay;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Constant.SocialLoginType socialLoginType;

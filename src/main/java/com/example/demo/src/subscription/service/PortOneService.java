@@ -25,9 +25,9 @@ public class PortOneService {
 
     private final PortOneToken portOneToken;
 
-    public PortOneService(@Value("${portOne.restApiKey}") String portOneRestApiKey,
-                          @Value("${portOne.secret}") String portOneSecret,
-                          @Value("${portOne.hostname}") String portOneApiHostname,
+    public PortOneService(@Value("${port-one.rest-api-key}") String portOneRestApiKey,
+                          @Value("${port-one.secret}") String portOneSecret,
+                          @Value("${port-one.hostname}") String portOneApiHostname,
                           PortOneToken portOneToken
                           ) {
         this.portOneRestApiKey = portOneRestApiKey;

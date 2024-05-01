@@ -66,8 +66,6 @@ public class KakaoUser {
     public OAuth toEntity(User user) {
         return OAuth.builder()
                 .externalId(kakaoAccount.email)
-                .externalName(properties.nickname)
-                .externalBirthDay(Integer.parseInt(kakaoAccount.birthday))
                 .socialLoginType(Constant.SocialLoginType.KAKAO)
                 .user(user)
                 .build();
