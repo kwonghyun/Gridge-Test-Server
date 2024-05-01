@@ -74,12 +74,10 @@ public class FeedService {
         Feed feed = feedRepository.findValidFeedWithUserById(feedId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FIND_FEED));
 
-        List<GetMediaRes> media = mediaContentService.getMediaByFeedId(feedId);
-        boolean liked = feedLikeRepository.existsLikeByFeedIdAndUserId(feedId, userId);
-        int likesCount = feedLikeRepository.countLikesByFeedId(feedId);
-        int commentsCount = commentService.countVisibleByFeedId(feedId);
-
-        return new GetFeedDetailsRes(feed, commentsCount, likesCount, liked, media);
+        return GetFeedDetailsRes.builder()
+                .content(feed.getContent())
+                .name(feed.getUser().getName())
+                .build();
     }
 
     @Transactional
